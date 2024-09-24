@@ -61,7 +61,17 @@ const GetAssistControl = async () => {
                                 "value": `${infoPage.search.toLowerCase()}`
                             },
                             {
+                                "property": "user.lastName",
+                                "operator": "contains",
+                                "value": `${infoPage.search.toLowerCase()}`
+                            },
+                            {
                                 "property": "user.secondLastName",
+                                "operator": "contains",
+                                "value": `${infoPage.search.toLowerCase()}`
+                            },
+                            {
+                                "property": "user.username",
                                 "operator": "contains",
                                 "value": `${infoPage.search.toLowerCase()}`
                             },
