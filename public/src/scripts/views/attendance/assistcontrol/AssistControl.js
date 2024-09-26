@@ -210,7 +210,10 @@ export class AssistControl {
                 let markingData = await getEntityData('Marcation', entity);
                 renderRightSidebar(UIRightSidebar);
                 const _values = {
-                    gallery: document.getElementById('galeria'),
+                    tab: document.getElementById('entity-editor'),
+                    gallery: document.getElementById('gallery'),
+                    gallery1: document.getElementById('galeria'),
+                    gallery2: document.getElementById('galeria2'),
                     status: document.getElementById('marking-status'),
                     name: document.getElementById('marking-name'),
                     dni: document.getElementById('marking-dni'),
@@ -244,8 +247,10 @@ export class AssistControl {
                 _values.endTime.value = markingData?.egressTime ?? '';
                 _values.endGuardID.value = markingData.egressIssued?.username ?? '';
                 _values.endGuardName.value = `${markingData.egressIssued?.firstName ?? ''}  ${markingData.egressIssued?.lastName ?? ''}`;
+                let images = [];
+                let images1 = [];
+                let images2 = [];
                 if (markingData?.camera1 !== undefined || markingData?.camera2 !== undefined || markingData?.camera3 !== undefined || markingData?.camera4 !== undefined) {
-                    let images = [];
                     if (markingData?.camera1 !== undefined) {
                         let details = {
                             "image": `${await getFile(markingData.camera1)}`,
@@ -253,7 +258,7 @@ export class AssistControl {
                             "icon": "camera",
                             "id": "camera"
                         };
-                        images.push(details);
+                        images1.push(details);
                     }
                     if (markingData?.camera2 !== undefined) {
                         let details = {
@@ -262,7 +267,7 @@ export class AssistControl {
                             "icon": "camera",
                             "id": "camera2"
                         };
-                        images.push(details);
+                        images1.push(details);
                     }
                     if (markingData?.camera3 !== undefined) {
                         let details = {
@@ -271,7 +276,7 @@ export class AssistControl {
                             "icon": "camera",
                             "id": "camera3"
                         };
-                        images.push(details);
+                        images1.push(details);
                     }
                     if (markingData?.camera4 !== undefined) {
                         let details = {
@@ -280,8 +285,24 @@ export class AssistControl {
                             "icon": "camera",
                             "id": "camera4"
                         };
-                        images.push(details);
+                        images1.push(details);
                     }
+                    for (let i = 0; i < images1.length; i++) {
+                        _values.gallery1.innerHTML += `
+                        <label><i class="fa-solid fa-${images1[i].icon}"></i> ${images1[i].description}</label>
+                        <img width="100%" class="note_picture margin_b_8" src="${images1[i].image}" id="entity-details-zoom" data-entityId="${images1[i].id}" name="${images1[i].id}">
+                    `;
+                    }
+                    images.push(images1);
+                }
+                else {
+                    _values.gallery1.innerHTML += `
+                <div class="input_detail">
+                    <label><i class="fa-solid fa-info-circle"></i> No hay imágenes</label>
+                </div>
+                `;
+                }
+                if (markingData?.camera5 !== undefined || markingData?.camera6 !== undefined || markingData?.camera7 !== undefined || markingData?.camera8 !== undefined) {
                     if (markingData?.camera5 !== undefined) {
                         let details = {
                             "image": `${await getFile(markingData.camera5)}`,
@@ -289,7 +310,7 @@ export class AssistControl {
                             "icon": "camera",
                             "id": "camera5"
                         };
-                        images.push(details);
+                        images2.push(details);
                     }
                     if (markingData?.camera6 !== undefined) {
                         let details = {
@@ -298,7 +319,7 @@ export class AssistControl {
                             "icon": "camera",
                             "id": "camera6"
                         };
-                        images.push(details);
+                        images2.push(details);
                     }
                     if (markingData?.camera7 !== undefined) {
                         let details = {
@@ -307,7 +328,7 @@ export class AssistControl {
                             "icon": "camera",
                             "id": "camera7"
                         };
-                        images.push(details);
+                        images2.push(details);
                     }
                     if (markingData?.camera8 !== undefined) {
                         let details = {
@@ -316,26 +337,33 @@ export class AssistControl {
                             "icon": "camera",
                             "id": "camera8"
                         };
-                        images.push(details);
+                        images2.push(details);
                     }
-                    for (let i = 0; i < images.length; i++) {
-                        _values.gallery.innerHTML += `
-                        <label><i class="fa-solid fa-${images[i].icon}"></i> ${images[i].description}</label>
-                        <img width="100%" class="note_picture margin_b_8" src="${images[i].image}" id="entity-details-zoom" data-entityId="${images[i].id}" name="${images[i].id}">
-                    `;
+                    for (let i = 0; i < images2.length; i++) {
+                        _values.gallery2.innerHTML += `
+                    <label><i class="fa-solid fa-${images2[i].icon}"></i> ${images2[i].description}</label>
+                    <img width="100%" class="note_picture margin_b_8" src="${images2[i].image}" id="entity-details-zoom" data-entityId="${images2[i].id}" name="${images2[i].id}">
+                `;
                     }
+                    images.push(images2);
+                }
+                else {
+                    _values.gallery2.innerHTML += `
+            <div class="input_detail">
+                <label><i class="fa-solid fa-info-circle"></i> No hay imágenes</label>
+            </div>
+            `;
+                }
+                if (images.length != 0) {
                     this.previewZoom(images);
                 }
                 else {
-                    _values.gallery.innerHTML += `
-                <div class="input_detail">
-                    <label><i class="fa-solid fa-info-circle"></i> No hay imágenes</label>
-                </div>
-                `;
+                    _values.tab.style.width = "30%";
+                    _values.gallery.style.flex = "0.5";
+                    _values.gallery1.style.width = "70px";
+                    _values.gallery2.style.width = "70px";
                 }
-                drawTagsIntoTables();
                 this.closeRightSidebar();
-                drawTagsIntoTables();
             };
         };
         this.closeRightSidebar = () => {
