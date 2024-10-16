@@ -1,7 +1,8 @@
-export const exportMarcationsPdf = (ar, start, end) => {
+import { getFile } from "../endpoints.js";
+export const exportMarcationsPdf = async (ar, start, end) => {
     // @ts-ignore
     window.jsPDF = window.jspdf.jsPDF;
-    // @ts-ignore
+    // @ts-ignored
     var doc = new jsPDF();
     doc.addImage("./public/src/assets/pictures/report.png", "PNG", 10, 10, 50, 15);
     doc.setDrawColor(0, 0, 128);
@@ -27,7 +28,6 @@ export const exportMarcationsPdf = (ar, start, end) => {
     doc.text(170, 50, "Estado");
     doc.line(5, 55, 200, 55);
     let row = 60;
-    let lineas = 0;
     let pagina = 1;
     doc.setTextColor(0, 0, 128);
     doc.text(10, 290, `Página ${pagina}`);
@@ -35,7 +35,7 @@ export const exportMarcationsPdf = (ar, start, end) => {
     for (let i = 0; i < ar.length; i++) {
         let marcation = ar[i];
         // @ts-ignore
-        //if(marcation.ingressDate >= start && marcation.ingressDate <= end){
+        //if (marcation.ingressDate >= start && marcation.ingressDate <= end) {
         doc.setFontSize(9);
         doc.setFont(undefined, 'normal');
         doc.setTextColor(0, 0, 0);
@@ -46,13 +46,39 @@ export const exportMarcationsPdf = (ar, start, end) => {
         doc.text(130, row, `${marcation?.egressDate ?? ''}`);
         doc.text(150, row, `${marcation?.egressTime ?? ''}`);
         doc.text(170, row, `${marcation.marcationState?.name ?? ''}`);
-        row += 5;
-        let limitLineas = 51;
-        if (pagina == 1)
-            limitLineas = 44;
-        if (lineas >= limitLineas) {
+        let imagesPath = [marcation?.camera1, marcation?.camera2, marcation?.camera3, marcation?.camera4, marcation?.camera5, marcation?.camera6, marcation?.camera7, marcation?.camera8];
+        let imagesTotal = 0;
+        let column = 5;
+        let countImage = 0;
+        let existImage = false;
+        for (let y = 0; y < imagesPath.length; y++) {
+            if (imagesPath[y] !== undefined) {
+                if (countImage > 3) {
+                    row += 32;
+                    column = 5;
+                    countImage = 0;
+                }
+                if (!existImage) {
+                    existImage = true;
+                    row += 5;
+                }
+                let image = await getFile(imagesPath[y]);
+                doc.addImage(`${image}`, "JPEG", column, row, 48, 30);
+                imagesTotal += 1;
+                countImage += 1;
+                column += 50;
+            }
+        }
+        if (imagesTotal !== 0) {
+            if (imagesTotal > 4) {
+                row += 30;
+            }
+            else {
+                row += 32;
+            }
+        }
+        if ((row + newDataBlock(ar, i)) > 280) {
             doc.addPage();
-            lineas = 0;
             row = 30;
             pagina += 1;
             doc.setFont(undefined, 'bold');
@@ -72,7 +98,9 @@ export const exportMarcationsPdf = (ar, start, end) => {
             doc.setTextColor(0, 0, 128);
             doc.text(10, 290, `Página ${pagina}`);
         }
-        lineas++;
+        else {
+            row += 5;
+        }
         //}
     }
     // Save the PDF
@@ -177,4 +205,26 @@ const generateFile = (ar, title, extension) => {
         //el navegador no admite esta opción
         alert("Su navegador no permite esta acción");
     }
+};
+const newDataBlock = (array, index) => {
+    let row = 0;
+    if (array[index + 1] != undefined) {
+        row += 5;
+        let imagesPath = [array[index + 1]?.camera1, array[index + 1]?.camera2, array[index + 1]?.camera3, array[index + 1]?.camera4, array[index + 1]?.camera5, array[index + 1]?.camera6, array[index + 1]?.camera7, array[index + 1]?.camera8];
+        let images = [];
+        for (let y = 0; y < imagesPath.length; y++) {
+            if (imagesPath[y] !== undefined) {
+                images.push(imagesPath[y]);
+            }
+        }
+        if (images.length !== 0) {
+            if (images.length > 4) {
+                row += 30;
+            }
+            else {
+                row += 32;
+            }
+        }
+    }
+    return row;
 };
