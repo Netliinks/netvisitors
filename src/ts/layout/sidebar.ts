@@ -163,7 +163,6 @@ export class Sidebar {
 
                 </div>
 
-               
               </div>
             </div>
           </div>
