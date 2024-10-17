@@ -19,7 +19,6 @@ import { Departments } from "../views/departments/Departments.js"
 import { SuperUsers } from "../views/users/SuperUsers/SuperUsers.js"
 import { Events } from "../views/binnacle/Events/EventsView.js"
 import { Binnacle } from "../views/binnacle/binnacle/BinnacleView.js";
-import { Blacklist } from "../views/users/blacklist/blacklist.js"
 import { Vehiculars } from "../views/binnacle/vehiculars/Vehiculars.js"
 import { Sporadic } from "../views/assignment/tasks/sporadic/Sporadic.js";
 import { currentDateTime } from "../tools.js"
@@ -60,12 +59,6 @@ export class Sidebar {
                 <div class="sidebar_subitem">
                   <span class="sidebar_subitem_label" id="render-contractors">
                     <i class="fa-regular fa-briefcase"></i> <div class="label">Contratistas</div>
-                  </span>
-                </div>
-
-                <div class="sidebar_subitem">
-                  <span class="sidebar_subitem_label" id="render-blacklist">
-                    <i class="fa-regular fa-exclamation-triangle"></i> <div class="label">Lista Negra</div>
                   </span>
                 </div>
 
@@ -221,10 +214,6 @@ export class Sidebar {
         document.getElementById('render-contractors')?.addEventListener('click', (): void => {
             new Contractors().render(Config.offset, Config.currentPage, "")
         })
-
-        document.getElementById('render-blacklist')?.addEventListener('click', () => {
-          new Blacklist().render(Config.offset, Config.currentPage, "");
-      });
 
         // render notes
         document.getElementById('render-notes')?.addEventListener('click', (): void => {
