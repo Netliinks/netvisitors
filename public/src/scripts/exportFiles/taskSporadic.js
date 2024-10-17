@@ -8,7 +8,7 @@ export const exportSporadicPdf = (ar, start, end) => {
     doc.setFont(undefined, 'bold');
     doc.setTextColor(0, 0, 128);
     doc.setFontSize(25);
-    doc.text(10, 40, `Específicas`);
+    doc.text(10, 40, `Consignas Eventuales`);
     doc.setFontSize(10);
     doc.setTextColor(0, 0, 0);
     doc.setFont(undefined, 'italic');
@@ -71,7 +71,7 @@ export const exportSporadicPdf = (ar, start, end) => {
     }
     // Save the PDF
     var d = new Date();
-    var title = "log_Específicas_" + d.getDate() + "_" + (d.getMonth() + 1) + "_" + d.getFullYear() + `.pdf`;
+    var title = "log_Eventuales_" + d.getDate() + "_" + (d.getMonth() + 1) + "_" + d.getFullYear() + `.pdf`;
     doc.save(title);
 };
 export const exportSporadicCsv = (ar, start, end) => {
@@ -90,7 +90,7 @@ export const exportSporadicCsv = (ar, start, end) => {
         rows.push(obj);
         //}
     }
-    generateFile(rows, "Específicas", "csv");
+    generateFile(rows, "Eventuales", "csv");
 };
 export const exportSporadicXls = (ar, start, end) => {
     let rows = [];
@@ -108,7 +108,7 @@ export const exportSporadicXls = (ar, start, end) => {
         rows.push(obj);
         //}
     }
-    generateFile(rows, "Específicas", "xls");
+    generateFile(rows, "Eventuales", "xls");
 };
 const generateFile = (ar, title, extension) => {
     //comprobamos compatibilidad
