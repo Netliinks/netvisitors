@@ -529,7 +529,7 @@ export class Sporadic {
                         "description": `${parse.description} | ${parse.execDate} ${parse.execTime}`,
                         "creationDate": `${dateFormat}`,
                         "creationTime": `${hourFormat}`,
-                        "firebaseId": `${currentDateTime().date}T${currentDateTime().timeHHMMSS}`,
+                        //"firebaseId": `${currentDateTime().date}T${currentDateTime().timeHHMMSS}`,
                         "notificationType": {
                             "id": `${notification[0].id}`
                         },
@@ -723,7 +723,7 @@ export class Sporadic {
                             "description": `${parse.description} | ${parse.execDate} ${parse.execTime}`,
                             "creationDate": `${currentDateTime().date}`,
                             "creationTime": `${currentDateTime().timeHHMM}`,
-                            "firebaseId": `${currentDateTime().date}T${currentDateTime().timeHHMMSS}`,
+                            //"firebaseId": `${currentDateTime().date}T${currentDateTime().timeHHMMSS}`,
                             "notificationType": {
                                 "id": `${notification[0].id}`
                             },
