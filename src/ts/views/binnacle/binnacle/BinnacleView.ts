@@ -67,6 +67,11 @@ const getEvents = async (): Promise<void> => {
                 "operator": "<>",
                 "value": `Botón Pánico`
               },
+              {
+                "property": "user.userType",
+                "operator": "=",
+                "value": `CUSTOMER`
+              }
             ],
             
         }, 
@@ -130,6 +135,11 @@ const getEvents = async (): Promise<void> => {
                     "operator": "<>",
                     "value": `Botón Pánico`
                   },
+                  {
+                    "property": "user.userType",
+                    "operator": "=",
+                    "value": `CUSTOMER`
+                  }
                 ]
               },
             sort: "-createdDate",
@@ -407,6 +417,11 @@ export class Binnacle {
                             "property": "creationDate",
                             "operator": "<=",
                             "value": `${_values.end.value}`
+                          },
+                          {
+                            "property": "user.userType",
+                            "operator": "=",
+                            "value": `CUSTOMER`
                           }
                         ],
                         

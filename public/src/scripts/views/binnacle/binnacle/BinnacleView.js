@@ -64,6 +64,11 @@ const getEvents = async () => {
                     "operator": "<>",
                     "value": `Botón Pánico`
                 },
+                {
+                    "property": "user.userType",
+                    "operator": "=",
+                    "value": `CUSTOMER`
+                }
             ],
         },
         sort: "-createdDate",
@@ -125,6 +130,11 @@ const getEvents = async () => {
                         "operator": "<>",
                         "value": `Botón Pánico`
                     },
+                    {
+                        "property": "user.userType",
+                        "operator": "=",
+                        "value": `CUSTOMER`
+                    }
                 ]
             },
             sort: "-createdDate",
@@ -381,6 +391,11 @@ export class Binnacle {
                                     "property": "creationDate",
                                     "operator": "<=",
                                     "value": `${_values.end.value}`
+                                },
+                                {
+                                    "property": "user.userType",
+                                    "operator": "=",
+                                    "value": `CUSTOMER`
                                 }
                             ],
                         },
