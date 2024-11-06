@@ -31,7 +31,7 @@ export class Sidebar {
         <div class="sidebar_top">
           <div class="sidebar_header"></div>
 
-          <div class="sidebar_items"  style="overflow-y:scroll; height: 100%; max-height: 45rem;">
+          <div class="sidebar_items"  style="overflow-y:scroll; height: 100%; <!-- max-height: 45rem; --> ">
             <div class="sidebar_item">
               <span class="sidebar_item_label" id="render-dashboard">
                 <i class="fa-regular fa-chart-simple"></i> <div class="label">Dashboard</div>
