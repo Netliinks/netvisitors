@@ -5,7 +5,7 @@
 //
 import { Config } from "../../../Configs.js";
 import { getEntityData, getFile, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js";
-import { CloseDialog, renderRightSidebar, filterDataByHeaderType, inputObserver, pageNumbers, fillBtnPagination } from "../../../tools.js";
+import { CloseDialog, renderRightSidebar, filterDataByHeaderType, inputObserver, pageNumbers, fillBtnPagination, calculateLine } from "../../../tools.js";
 import { UIContentLayout, UIRightSidebar } from "./Layout.js";
 import { UITableSkeletonTemplate } from "./Template.js";
 import { exportReportCsv, exportReportPdf, exportReportXls } from "../../../exportFiles/reports.js";
@@ -53,6 +53,11 @@ const GetNotes = async () => {
                             },
                             {
                                 "property": "content",
+                                "operator": "contains",
+                                "value": `${infoPage.search.toLowerCase()}`
+                            },
+                            {
+                                "property": "user.username",
                                 "operator": "contains",
                                 "value": `${infoPage.search.toLowerCase()}`
                             }
@@ -126,8 +131,9 @@ export class Notes {
                     const noteCreationDate = noteCreationDateAndTime[0];
                     const noteCreationTime = noteCreationDateAndTime[1];
                     row.innerHTML += `
-                    <td>${note.title}</td>
-                    <td>${note.content}</td>
+                    <td>${calculateLine(note?.title ?? '', 40)}</td>
+                    <td>${calculateLine(note?.content ?? '', 40)}</td>
+                    <td>${note?.user?.username ?? ''}</td>
                     <td id="table-date">${noteCreationDate}</td>
                     <td>
                         <button class="button" id="entity-details" data-entityId="${note.id}">

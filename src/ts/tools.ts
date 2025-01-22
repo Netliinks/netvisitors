@@ -422,6 +422,7 @@ export const calculateGestionMarcation = (assistControl: any) => {
     let objDate: any = {}
     let arrayAssist: any = []
     assistControl.forEach((marcation: any) => {
+        // @ts-ignore
         let date = marcation.ingressDate+" "+marcation.user?.username ?? ''
         if (objDate[date]) {
             objDate[date].push(marcation);
@@ -482,6 +483,7 @@ export const calculateGestionMarcation = (assistControl: any) => {
             "egressDate": `${objects[0].egressDate}`,
             "ingressTime": `${format(minDate)}`,
             "egressTime": `${fechaSalida}`,
+            "username": `${objects[0]?.user?.username ?? ''}`,
         };
         arrayAssist.push(obj);
     }
@@ -507,4 +509,17 @@ export const searchUniversalSingle = async (param: any, operator: any, value: an
     }else{
         return data;
     }
+}
+
+export const calculateLine = (text: any, limit: any) => {
+    if(text != undefined){
+        if(text.length <= limit){
+            return text;
+        }else{
+            return text.slice(0, limit)+"...";
+        }
+    }else{
+        return '';
+    }
+    
 }

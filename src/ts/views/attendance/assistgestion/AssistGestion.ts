@@ -171,6 +171,7 @@ export class AssistGestion {
                 row.innerHTML += `
                 <td style="white-space: nowrap">${assistControl.firstName} ${assistControl.lastName}</td>
                 <td>${assistControl.dni}</td>
+                <td>${assistControl.username}</td>
                 <td id="table-date">${assistControl.ingressDate}</td>
                 <td id="table-date">${assistControl.ingressTime}</td>
                 <td id="table-date">${assistControl.egressTime}</td>

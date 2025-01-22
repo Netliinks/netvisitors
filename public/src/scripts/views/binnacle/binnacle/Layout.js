@@ -28,6 +28,10 @@ export const UIContentLayout = `
             Contenido <i class="fa-regular fa-filter"></i>
             </span></th>
 
+            <th><span data-type="user">
+            Usuario <i class="fa-regular fa-filter"></i>
+            </span></th>
+
             <th class="thead_centered" width=220><span data-type="date">
             Fecha <i class="fa-regular fa-filter"></i>
             </span></th>

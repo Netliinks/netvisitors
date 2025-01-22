@@ -74,6 +74,11 @@ const GetVisits = async (): Promise<void> => {
                         "property": "visitState.name",
                         "operator": "contains",
                         "value": `${infoPage.search.toLowerCase()}`
+                      },
+                      {
+                          "property": "user.username",
+                          "operator": "contains",
+                          "value": `${infoPage.search.toLowerCase()}`
                       }
                     ]
                   },
@@ -156,6 +161,7 @@ export class Visits {
                 row.innerHTML += `
                     <td style="white-space: nowrap">${visit.firstName} ${visit.firstLastName} ${visit.secondLastName}</td>
                     <td>${visit.dni}</td>
+                    <td>${visit?.user?.username ?? ''}</td>
                     <td id="table-date">${visit.creationDate}</td>
                     <td id="table-time" style="white-space: nowrap">${visit.creationTime}</td>
                     <td>${verifyUserType(visit.user.userType)}</td>

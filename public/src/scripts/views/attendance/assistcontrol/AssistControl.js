@@ -75,16 +75,6 @@ const GetAssistControl = async () => {
                                 "property": "marcationState.name",
                                 "operator": "contains",
                                 "value": `${infoPage.search.toLowerCase()}`
-                            },
-                            {
-                                "property": "ingressIssued.username",
-                                "operator": "contains",
-                                "value": `${infoPage.search.toLowerCase()}`
-                            },
-                            {
-                                "property": "egressIssued.username",
-                                "operator": "contains",
-                                "value": `${infoPage.search.toLowerCase()}`
                             }
                         ]
                     },
@@ -157,6 +147,7 @@ export class AssistControl {
                     row.innerHTML += `
                     <td style="white-space: nowrap">${assistControl.user?.firstName ?? ''} ${assistControl.user?.lastName ?? ''} ${assistControl.user?.secondLastName ?? ''}</td>
                     <td>${assistControl.user?.dni ?? ''}</td>
+                    <td>${assistControl?.user?.username ?? ''}</td>
                     <td id="table-date">${assistControl.ingressDate}</td>
                     <td id="table-date">${assistControl.ingressTime}</td>
                     <td id="table-date">${assistControl?.egressDate ?? ''}</td>

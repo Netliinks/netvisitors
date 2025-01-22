@@ -3,7 +3,7 @@
 import { Config } from "../../../Configs.js"
 import { getEntityData, getFile, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js"
 import { exportEventCsv, exportEventPdf, exportEventXls } from "../../../exportFiles/events.js"
-import { CloseDialog, drawTagsIntoTables, renderRightSidebar, filterDataByHeaderType, inputObserver, pageNumbers, fillBtnPagination } from "../../../tools.js"
+import { CloseDialog, drawTagsIntoTables, renderRightSidebar, filterDataByHeaderType, inputObserver, pageNumbers, fillBtnPagination, calculateLine } from "../../../tools.js"
 import { InterfaceElement, InterfaceElementCollection } from "../../../types.js"
 import { UIContentLayout, UIRightSidebar } from "./Layout.js"
 import { UITableSkeletonTemplate } from "./Template.js"
@@ -89,6 +89,11 @@ const getEvents = async (): Promise<void> => {
                         "property": "description",
                         "operator": "contains",
                         "value": `${infoPage.search.toLowerCase()}`
+                      },
+                      {
+                          "property": "user.username",
+                          "operator": "contains",
+                          "value": `${infoPage.search.toLowerCase()}`
                       }
                     ]
                   },
@@ -199,8 +204,9 @@ export class Events {
                 let event = paginatedItems[i] // getting note items
                 let row: InterfaceElement = document.createElement('TR')
                 row.innerHTML += `
-                    <td>${event.title}</td>
-                    <td>${event.description}</td>
+                    <td>${calculateLine(event?.title ?? '', 40)}</td>
+                    <td>${calculateLine(event?.description ?? '', 40)}</td>
+                    <td>${event?.user?.username ?? ''}</td>
                     <td id="table-date">${event.creationDate}</td>
                     <td>
                         <button class="button" id="entity-details" data-entityId="${event.id}">
