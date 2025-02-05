@@ -473,6 +473,32 @@ export const searchUniversalSingle = async (param, operator, value, table) => {
         return data;
     }
 };
+export const searchUniversalValue = async (param, operator, value, table) => {
+    const raw = JSON.stringify({
+        "filter": {
+            "conditions": [
+                {
+                    "property": `${param}`,
+                    "operator": `${operator}`,
+                    "value": `${value}`
+                },
+                {
+                    "property": `customer.id`,
+                    "operator": `=`,
+                    "value": ``
+                },
+            ]
+        },
+        sort: "createdDate",
+    });
+    const data = await getFilterEntityData(`${table}`, raw);
+    if (data == undefined || data.length == 0) {
+        alert(`${param} ${value} no obtenido(a)`);
+    }
+    else {
+        return data;
+    }
+};
 export const calculateLine = (text, limit) => {
     if (text != undefined) {
         if (text.length <= limit) {

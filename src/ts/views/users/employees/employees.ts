@@ -5,7 +5,7 @@
 //
 import { deleteEntity, getEntityData, registerEntity, setPassword, setUserRole, updateEntity, getUserInfo, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js"
 import { NUsers } from "../../../namespaces.js"
-import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyEmail, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalSingle } from "../../../tools.js"
+import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyEmail, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalValue } from "../../../tools.js"
 import { InterfaceElement, InterfaceElementCollection } from "../../../types.js"
 import { Config } from "../../../Configs.js"
 import { tableLayout } from "./Layout.js"
@@ -316,7 +316,7 @@ export class Employees implements NUsers.IEmployees {
         })
 
         const renderInterface = async (entities: string): Promise<void> => {
-            const naDepartment = await searchUniversalSingle("name", "=", "N/A", "Department")
+            const naDepartment = await searchUniversalValue("name", "=", "N/A", "Department")
             this.entityDialogContainer.innerHTML = ''
             this.entityDialogContainer.style.display = 'flex'
             this.entityDialogContainer.innerHTML = `
@@ -606,7 +606,7 @@ export class Employees implements NUsers.IEmployees {
     private import() {
         const importEmployees: InterfaceElement = document.getElementById('import-entities')
         importEmployees.addEventListener('click', async (): Promise<void> => {
-            const naDepartment = await searchUniversalSingle("name", "=", "N/A", "Department")
+            const naDepartment = await searchUniversalValue("name", "=", "N/A", "Department")
             this.entityDialogContainer.innerHTML = ''
             this.entityDialogContainer.style.display = 'flex'
             this.entityDialogContainer.innerHTML = `

@@ -1,6 +1,6 @@
 // @filename: Contractors.ts
 import { deleteEntity, getEntityData, registerEntity, setPassword, setUserRole, updateEntity, getUserInfo, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js";
-import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyUsername, pageNumbers, fillBtnPagination } from "../../../tools.js";
+import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalValue } from "../../../tools.js";
 import { Config } from "../../../Configs.js";
 import { tableLayout } from "./Layout.js";
 import { tableLayoutTemplate } from "./Templates.js";
@@ -413,6 +413,7 @@ export class Contractors {
             renderInterface('User');
         });
         const renderInterface = async (entities) => {
+            const naDepartment = await searchUniversalValue("name", "=", "N/A", "Department");
             this.entityDialogContainer.innerHTML = '';
             this.entityDialogContainer.style.display = 'flex';
             this.entityDialogContainer.innerHTML = `
@@ -584,7 +585,7 @@ export class Contractors {
                         "id": `${currentUserInfo.citadel.id}`
                     },
                     "department": {
-                        "id": `${currentUserInfo.department.id}`
+                        "id": `${naDepartment[0]?.id ?? ''}`
                     },
                     "business": {
                         "id": `${currentUserInfo.business.id}`
@@ -640,7 +641,8 @@ export class Contractors {
     }
     import() {
         const _importContractors = document.getElementById('import-entities');
-        _importContractors.addEventListener('click', () => {
+        _importContractors.addEventListener('click', async () => {
+            const naDepartment = await searchUniversalValue("name", "=", "N/A", "Department");
             this.entityDialogContainer.innerHTML = '';
             this.entityDialogContainer.style.display = 'flex';
             this.entityDialogContainer.innerHTML = `
@@ -723,7 +725,7 @@ export class Contractors {
                                 "id": `${currentUserInfo.citadel?.id}`
                             },
                             "department": {
-                                "id": `${currentUserInfo.department?.id}`
+                                "id": `${naDepartment[0]?.id ?? ''}`
                             },
                             "business": {
                                 "id": `${currentUserInfo.business.id}`

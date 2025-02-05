@@ -1,6 +1,6 @@
 // @filename: SuperUsers.ts
 import { deleteEntity, getEntityData, registerEntity, setPassword, setUserRole, updateEntity, getUserInfo, sendMail, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js";
-import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyEmail, filterDataByHeaderType, getVerifyUsername, pageNumbers, fillBtnPagination } from "../../../tools.js";
+import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyEmail, filterDataByHeaderType, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalValue } from "../../../tools.js";
 import { Config } from "../../../Configs.js";
 import { tableLayout, UIConvertToSU } from "./Layout.js";
 import { tableLayoutTemplate } from "./Templates.js";
@@ -415,6 +415,7 @@ export class SuperUsers {
             renderInterface('User');
         });
         const renderInterface = async (entities) => {
+            const naDepartment = await searchUniversalValue("name", "=", "N/A", "Department");
             this.entityDialogContainer.innerHTML = '';
             this.entityDialogContainer.style.display = 'flex';
             this.entityDialogContainer.innerHTML = `
@@ -573,7 +574,7 @@ export class SuperUsers {
                         "id": `${currentUserInfo.business.id}`
                     },
                     "department": {
-                        "id": `${currentUserInfo.department.id}`
+                        "id": `${naDepartment[0]?.id ?? ''}`
                     },
                     "phone": `${inputsCollection.phoneNumer.value}`,
                     "userType": "CUSTOMER",
