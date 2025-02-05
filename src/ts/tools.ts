@@ -505,7 +505,7 @@ export const searchUniversalSingle = async (param: any, operator: any, value: an
     });
     const data = await getFilterEntityData(`${table}`, raw);
     if(data == undefined || data.length == 0){
-        console.log(`${param} ${value} no obtenido(a)`);
+        alert(`${param} ${value} no obtenido(a)`);
     }else{
         return data;
     }

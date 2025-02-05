@@ -49,6 +49,10 @@ export const tableLayout = `
         Estado <i class="fa-regular fa-filter"></i>
       </span></th>
 
+      <th><span data-type="department">
+        Departamento <i class="fa-regular fa-filter"></i>
+      </span></th>
+
       <th class="header_filled"></th>
 
     </tr></thead>

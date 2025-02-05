@@ -5,7 +5,7 @@
 //
 import { deleteEntity, getEntityData, registerEntity, setPassword, setUserRole, updateEntity, getUserInfo, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js"
 import { NUsers } from "../../../namespaces.js"
-import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyEmail, getVerifyUsername, pageNumbers, fillBtnPagination } from "../../../tools.js"
+import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyEmail, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalSingle } from "../../../tools.js"
 import { InterfaceElement, InterfaceElementCollection } from "../../../types.js"
 import { Config } from "../../../Configs.js"
 import { tableLayout } from "./Layout.js"
@@ -15,6 +15,7 @@ import { exportEmployeeCsv, exportEmployeePdf, exportEmployeeXls } from "../../.
 const tableRows = Config.tableRows
 const currentPage = Config.currentPage
 const customerId = localStorage.getItem('customer_id')
+let isSame: boolean = customerId == Config.idEsmeraldas ? true : false;
 let currentUserInfo : any
 let infoPage = {
     count: 0,
@@ -176,11 +177,12 @@ export class Employees implements NUsers.IEmployees {
                 let row: InterfaceElement =
                     document.createElement('tr')
                 row.innerHTML += `
-          <td>${client.firstName} ${client.lastName}</dt>
-          <td>${client.dni}</dt>
-          <td>${client.username}</dt>
+          <td>${client.firstName} ${client.lastName}</td>
+          <td>${client.dni}</td>
+          <td>${client.username}</td>
           <td class="key"><button class="button" id="change-user-password" data-userid="${client.id}"><i class="fa-regular fa-key"></i></button></td>
           <td class="tag"><span>${client.state.name}</span></td>
+          <td>${client?.department?.name ?? ''}</td>
           <td class="entity_options">
             <button class="button" id="edit-entity" data-entityId="${client.id}">
               <i class="fa-solid fa-pen"></i>
@@ -314,6 +316,7 @@ export class Employees implements NUsers.IEmployees {
         })
 
         const renderInterface = async (entities: string): Promise<void> => {
+            const naDepartment = await searchUniversalSingle("name", "=", "N/A", "Department")
             this.entityDialogContainer.innerHTML = ''
             this.entityDialogContainer.style.display = 'flex'
             this.entityDialogContainer.innerHTML = `
@@ -377,6 +380,12 @@ export class Employees implements NUsers.IEmployees {
               <div id="input-options" class="input_options">
               </div>
             </div>
+
+            <div class="material_input" style="display: ${isSame ? "block" : "none"};">
+            <input type="text" class="input_filled" id="entity-department" data-optionid="${naDepartment[0]?.id ?? ''}" value="${naDepartment[0]?.name ?? ''}" disabled>
+            <label for="entity-department"><i class="fa-solid fa-building"></i> Departamento <button style="background-color:white; color:#808080; font-size:12px;" id="btn-select-department"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:12px; color:blue;"></i></button></label>
+            </div>
+
             <!--
             <div class="material_input_select" style="display: none">
               <label for="entity-business">Empresa</label>
@@ -445,6 +454,7 @@ export class Employees implements NUsers.IEmployees {
             //inputSelect('Department', 'entity-department')
             //inputSelect('Business', 'entity-business')
             this.close()
+            this.selectDepartment()
             this.generateUserName()
 
 
@@ -467,6 +477,7 @@ export class Employees implements NUsers.IEmployees {
                     //departments: document.getElementById('entity-department'),
                     allowVisits: document.getElementById('allow-visits'),
                     email: document.getElementById('entity-email'),
+                    department: document.getElementById('entity-department')
                 }
 
                 const raw = JSON.stringify({
@@ -494,7 +505,7 @@ export class Employees implements NUsers.IEmployees {
                         "id": `${currentUserInfo.citadel.id}`
                     },
                     "department": {
-                        "id": `${currentUserInfo.department.id}`
+                        "id": `${_values.department.dataset.optionid}`
                     },
                     "business": {
                         "id": `${currentUserInfo.business.id}`
@@ -594,7 +605,8 @@ export class Employees implements NUsers.IEmployees {
 
     private import() {
         const importEmployees: InterfaceElement = document.getElementById('import-entities')
-        importEmployees.addEventListener('click', (): void => {
+        importEmployees.addEventListener('click', async (): Promise<void> => {
+            const naDepartment = await searchUniversalSingle("name", "=", "N/A", "Department")
             this.entityDialogContainer.innerHTML = ''
             this.entityDialogContainer.style.display = 'flex'
             this.entityDialogContainer.innerHTML = `
@@ -690,7 +702,7 @@ export class Employees implements NUsers.IEmployees {
                                 "id": `${currentUserInfo.citadel?.id}`
                             },
                             "department": {
-                                "id": `${currentUserInfo.department?.id}`
+                                "id": `${naDepartment[0]?.id ?? ''}`
                             },
                             "business": {
                                 "id": `${currentUserInfo.business.id}`
@@ -805,6 +817,12 @@ export class Employees implements NUsers.IEmployees {
                     <div id="input-options" class="input_options">
                     </div>
                     </div>
+
+                    <div class="material_input" style="display: ${isSame ? "block" : "none"};">
+                    <input type="text" class="input_filled" id="entity-department" data-optionid="${data?.department?.id ?? ''}" value="${data?.department?.name ?? ''}" disabled>
+                    <label for="entity-department"><i class="fa-solid fa-building"></i> Departamento <button style="background-color:white; color:#808080; font-size:12px;" id="btn-select-department"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:12px; color:blue;"></i></button></label>
+                    </div>
+
                     <!--
                     <div class="material_input_select" style="display: none">
                     <label for="entity-business">Empresa</label>
@@ -879,6 +897,7 @@ export class Employees implements NUsers.IEmployees {
             //inputSelect('Business', 'entity-citadel')
             //inputSelect('Customer', 'entity-customer')
             inputSelect('State', 'entity-state', data.state.name)
+            this.selectDepartment()
             //inputSelect('Department', 'entity-department')
             //inputSelect('Business', 'entity-business')
             const qr: InterfaceElement = document.getElementById("qrcode")
@@ -918,7 +937,7 @@ export class Employees implements NUsers.IEmployees {
                     phone: document.getElementById('entity-phone'),
                     dni: document.getElementById('entity-dni'),
                     status: document.getElementById('entity-state'),
-                    //department: document.getElementById('entity-department'),
+                    department: document.getElementById('entity-department'),
                     ingressHour: document.getElementById('start-time'),
                     turnChange: document.getElementById('end-time'),
                     allowVisits: document.getElementById('allow-visits')
@@ -931,9 +950,9 @@ export class Employees implements NUsers.IEmployees {
                     "state": {
                         "id": `${_values.status.dataset.optionid}`
                     },
-                    /*"department": {
+                    "department": {
                         "id": `${_values.department.dataset.optionid}`
-                    },*/
+                    },
                     "ingressHour": `${_values.ingressHour.value}`,
                     "turnChange": `${_values.turnChange.value}`,
                     "phone": `${_values.phone.value}`,
@@ -1211,6 +1230,180 @@ export class Employees implements NUsers.IEmployees {
         closeButton.addEventListener('click', () => {
             new CloseDialog().x(editor)
         })
+    }
+
+    private selectDepartment(): void {
+            
+        const btnDepartment: InterfaceElement = document.getElementById('btn-select-department')
+    
+        btnDepartment.addEventListener('click', async (): Promise<void> => {
+                const department: InterfaceElement = document.getElementById('entity-department')
+                modalTable(0, "", department)
+            })
+    
+            async function modalTable(offset: any, search: any, element: InterfaceElement){
+                const dialogContainer: InterfaceElement =
+                document.getElementById('app-dialogs')
+                let raw = JSON.stringify({
+                    "filter": {
+                        "conditions": [
+                            {
+                            "property": "customer.id",
+                            "operator": "=",
+                            "value": `${customerId}`
+                            }
+                        ],
+                        
+                    }, 
+                    sort: "+createdDate",
+                    limit: Config.modalRows,
+                    offset: offset,
+                    fetchPlan: 'full',
+                    
+                })
+                if(search != ""){
+                    raw = JSON.stringify({
+                        "filter": {
+                            "conditions": [
+                                {
+                                "group": "OR",
+                                "conditions": [
+                                    {
+                                    "property": "name",
+                                    "operator": "contains",
+                                    "value": `${search.toLowerCase()}`
+                                    }
+                                ]
+                                },
+                                {
+                                "property": "customer.id",
+                                "operator": "=",
+                                "value": `${customerId}`
+                                }
+                            ],
+                            
+                        }, 
+                        sort: "+createdDate",
+                        limit: Config.modalRows,
+                        offset: offset,
+                        fetchPlan: 'full',
+                        
+                    })
+                }
+                let dataModal = await getFilterEntityData("Department", raw)
+                dialogContainer.style.display = 'block'
+                dialogContainer.innerHTML = `
+                    <div class="dialog_content" id="dialog-content">
+                        <div class="dialog">
+                            <div class="dialog_container padding_8">
+                                <div class="dialog_header">
+                                    <h2>Seleccione un departamento</h2>
+                                </div>
+    
+                                <div class="dialog_message padding_8">
+                                    <div class="datatable_tools">
+                                        <input type="search"
+                                        class="search_input"
+                                        placeholder="Buscar"
+                                        id="search-modal">
+                                        <button
+                                            class="datatable_button add_user"
+                                            id="btnSearchModal">
+                                            <i class="fa-solid fa-search"></i>
+                                        </button>
+                                    </div>
+                                    <div class="dashboard_datatable">
+                                        <table class="datatable_content margin_t_16">
+                                        <thead>
+                                            <tr>
+                                            <th>Nombre</th>
+                                            <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="datatable-modal-body">
+                                        </tbody>
+                                        </table>
+                                    </div>
+                                    <br>
+                                </div>
+    
+                                <div class="dialog_footer">
+                                    <button class="btn btn_primary" id="prevModal"><i class="fa-solid fa-arrow-left"></i></button>
+                                    <button class="btn btn_primary" id="nextModal"><i class="fa-solid fa-arrow-right"></i></button>
+                                    <button class="btn btn_danger" id="cancel">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+                inputObserver()
+                const datetableBody: InterfaceElement = document.getElementById('datatable-modal-body')
+                if (dataModal.length === 0) {
+                    let row: InterfaceElement = document.createElement('tr')
+                    row.innerHTML = `
+                        <td>No hay datos</td>
+                    `
+                    datetableBody.appendChild(row)
+                }
+                else {
+                    for (let i = 0; i < dataModal.length; i++) {
+                        let client = dataModal[i]
+                        let row: InterfaceElement =
+                            document.createElement('tr')
+                        row.innerHTML += `
+                            <td>${client?.name ?? ''}</td>
+                            <td class="entity_options">
+                                <button class="button" id="item-department" data-entityId="${client.id}" data-entityName="${client.name}">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </button>
+                            </td>
+                        `
+                        datetableBody.appendChild(row)
+                    }
+                }
+                const txtSearch: InterfaceElement = document.getElementById('search-modal')
+                const btnSearchModal: InterfaceElement = document.getElementById('btnSearchModal')
+                const _selectDepartment: InterfaceElement = document.querySelectorAll('#item-department')
+                const _closeButton: InterfaceElement = document.getElementById('cancel')
+                const _dialog: InterfaceElement = document.getElementById('dialog-content')
+                const prevModalButton: InterfaceElement = document.getElementById('prevModal')
+                const nextModalButton: InterfaceElement = document.getElementById('nextModal')
+                txtSearch.value = search ?? ''
+    
+    
+                _selectDepartment.forEach((edit: InterfaceElement) => {
+                    const entityId = edit.dataset.entityid
+                    const entityName = edit.dataset.entityname
+                    edit.addEventListener('click', (): void => {
+                        element.setAttribute('data-optionid', entityId)
+                        element.setAttribute('value', `${entityName}`)
+                        element.classList.add('input_filled')
+                        new CloseDialog().x(_dialog)
+                    })
+                
+                })
+    
+                btnSearchModal.onclick = () => {
+                    modalTable(0, txtSearch.value, element)
+                }
+    
+                _closeButton.onclick = () => {
+                    new CloseDialog().x(_dialog)
+                }
+    
+                nextModalButton.onclick = () => {
+                    offset = Config.modalRows + (offset)
+                    modalTable(offset, search, element)
+                }
+    
+                prevModalButton.onclick = () => {
+                    if(offset > 0){
+                    offset = (offset) - Config.modalRows
+                    modalTable(offset, search, element)
+                    }
+                }
+            }
+    
     }
 }
 
