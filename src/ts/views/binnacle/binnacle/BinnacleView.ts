@@ -307,162 +307,6 @@ export class Binnacle {
         }
     }
 
-    private export = (): void => {
-        const exportNotes: InterfaceElement = document.getElementById('export-entities');
-        exportNotes.addEventListener('click', async() => {
-            this.dialogContainer.style.display = 'block';
-            this.dialogContainer.innerHTML = `
-                <div class="dialog_content" id="dialog-content">
-                    <div class="dialog">
-                        <div class="dialog_container padding_8">
-                            <div class="dialog_header">
-                                <h2>Seleccionar la fecha</h2>
-                            </div>
-
-                            <div class="dialog_message padding_8">
-                                <div class="form_group">
-                                    <div class="form_input">
-                                        <label class="form_label" for="start-date">Desde:</label>
-                                        <input type="date" class="input_date input_date-start" id="start-date" name="start-date">
-                                    </div>
-                    
-                                    <div class="form_input">
-                                        <label class="form_label" for="end-date">Hasta:</label>
-                                        <input type="date" class="input_date input_date-end" id="end-date" name="end-date">
-                                    </div>
-
-                                    <label for="exportCsv">
-                                        <input type="radio" id="exportCsv" name="exportOption" value="csv" /> CSV
-                                    </label>
-
-                                    <label for="exportXls">
-                                        <input type="radio" id="exportXls" name="exportOption" value="xls" checked /> XLS
-                                    </label>
-
-                                    <label for="exportPdf">
-                                        <input type="radio" id="exportPdf" name="exportOption" value="pdf" /> PDF
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="dialog_footer">
-                                <button class="btn btn_primary" id="cancel">Cancelar</button>
-                                <button class="btn btn_danger" id="export-data">Exportar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            let fecha = new Date(); //Fecha actual
-            let mes: any = fecha.getMonth()+1; //obteniendo mes
-            let dia: any = fecha.getDate(); //obteniendo dia
-            let anio: any = fecha.getFullYear(); //obteniendo año
-            if(dia<10)
-                dia='0'+dia; //agrega cero si el menor de 10
-            if(mes<10)
-                mes='0'+mes //agrega cero si el menor de 10
-
-            // @ts-ignore
-            document.getElementById("start-date").value = anio+"-"+mes+"-"+dia;
-            // @ts-ignore
-            document.getElementById("end-date").value = anio+"-"+mes+"-"+dia;
-            inputObserver();
-            const _closeButton: InterfaceElement = document.getElementById('cancel');
-            const exportButton: InterfaceElement = document.getElementById('export-data');
-            const _dialog: InterfaceElement = document.getElementById('dialog-content');
-            exportButton.addEventListener('click', async() => {
-                const _values: any = {
-                    start: document.getElementById('start-date'),
-                    end: document.getElementById('end-date'),
-                    exportOption: document.getElementsByName('exportOption')
-                }
-                let rawExport = JSON.stringify({
-                    "filter": {
-                        "conditions": [
-                          {
-                            "property": "customer.id",
-                            "operator": "=",
-                            "value": `${customerId}`
-                          },
-                          {
-                            "property": "notificationType.name",
-                            "operator": "<>",
-                            "value": `Otro`
-                          },
-                          {
-                            "property": "notificationType.name",
-                            "operator": "<>",
-                            "value": `🔥 Fuego`
-                          },
-                          {
-                            "property": "notificationType.name",
-                            "operator": "<>",
-                            "value": `🚨 Hombre Caído`
-                          },
-                          {
-                            "property": "notificationType.name",
-                            "operator": "<>",
-                            "value": `🚪 Intrusión`
-                          },
-                          {
-                            "property": "notificationType.name",
-                            "operator": "<>",
-                            "value": `🏚 Robo`
-                          },
-                          {
-                            "property": "notificationType.name",
-                            "operator": "<>",
-                            "value": `Botón Pánico`
-                          },
-                          {
-                            "property": "creationDate",
-                            "operator": ">=",
-                            "value": `${_values.start.value}`
-                          },
-                          {
-                            "property": "creationDate",
-                            "operator": "<=",
-                            "value": `${_values.end.value}`
-                          },
-                          {
-                            "property": "user.userType",
-                            "operator": "=",
-                            "value": `CUSTOMER`
-                          }
-                        ],
-                        
-                    }, 
-                    sort: "-createdDate",
-                    fetchPlan: 'full',
-                    
-                })
-                const events: any = await getFilterEntityData("Notification", rawExport) //await getEvents();
-                for (let i = 0; i < _values.exportOption.length; i++) {
-                    let ele: any = _values.exportOption[i]
-                    if (ele.type = "radio") {
-    
-                        if (ele.checked){
-                            if(ele.value == "xls"){
-                                // @ts-ignore
-                               exportBinnacleXls(events, _values.start.value, _values.end.value)
-                            }else if(ele.value == "csv"){
-                                // @ts-ignore
-                                exportBinnacleCsv(events, _values.start.value, _values.end.value)
-                            }else if(ele.value == "pdf"){
-                                // @ts-ignore
-                                exportBinnaclePdf(events, _values.start.value, _values.end.value)
-                            }
-                        }
-                    }
-                }
-                
-                
-            });
-            _closeButton.onclick = () => {
-                new CloseDialog().x(_dialog);
-            };
-        });
-    };
 
     private pagination(items: [], limitRows: number, currentPage: number) {
         const tableBody: InterfaceElement = document.getElementById('datatable-body')
@@ -550,4 +394,252 @@ export class Binnacle {
             new CloseDialog().x(editor)
         })
     }
+
+    private export = (): void => {
+        const exportNotes: InterfaceElement = document.getElementById('export-entities');
+        exportNotes.addEventListener('click', async() => {
+            this.siebarDialogContainer.innerHTML = '';
+            this.siebarDialogContainer.style.display = 'flex';
+            this.siebarDialogContainer.innerHTML = `
+                <div class="entity_editor" id="entity-editor">
+                <div class="entity_editor_header">
+                    <div class="user_info">
+                    <div class="avatar"><i class="fa-regular fa-file-export"></i></div>
+                    <h1 class="entity_editor_title">Exportar<br><small>Datos</small></h1>
+                    </div>
+
+                    <button class="btn btn_close_editor" id="close"><i class="fa-solid fa-x"></i></button>
+                </div>
+
+                <!-- EDITOR BODY -->
+                <div class="entity_editor_body">
+                    <div class="form_group">
+                        <div class="form_input">
+                            <label class="form_label" for="start-date">Desde:</label>
+                            <input type="date" class="input_date input_date-start" id="start-date" name="start-date">
+                        </div>
+        
+                        <div class="form_input">
+                            <label class="form_label" for="end-date">Hasta:</label>
+                            <input type="date" class="input_date input_date-end" id="end-date" name="end-date">
+                        </div>
+
+                    </div>
+
+                    <div class="input_checkbox">
+                        <label for="exportCsv">
+                            <input type="radio" class="checkbox" id="exportCsv" name="exportOption" value="csv" /> CSV
+                        </label>
+                    </div>
+
+                    <div class="input_checkbox">
+                        <label for="exportXls">
+                            <input type="radio" class="checkbox" id="exportXls" name="exportOption" value="xls" checked /> XLS
+                        </label>
+                    </div>
+
+                    <div class="input_checkbox">
+                        <label for="exportPdf">
+                            <input type="radio" class="checkbox" id="exportPdf" name="exportOption" value="pdf" /> PDF
+                        </label>
+                    </div>
+
+                </div>
+                <!-- END EDITOR BODY -->
+
+                <div class="entity_editor_footer">
+                    <button class="btn btn_primary btn_widder" id="export-data">Listo</button>
+                </div>
+                </div>
+            `;
+            // @ts-ignore
+            inputObserver();
+            let fecha: any = new Date(); //Fecha actual
+            let mes: any = fecha.getMonth()+1; //obteniendo mes
+            let dia: any = fecha.getDate(); //obteniendo dia
+            let anio: any = fecha.getFullYear(); //obteniendo año
+            if(dia<10)
+                dia='0'+dia; //agrega cero si el menor de 10
+            if(mes<10)
+                mes='0'+mes //agrega cero si el menor de 10
+            // @ts-ignore
+            document.getElementById("start-date").value = anio+"-"+mes+"-"+dia;
+            // @ts-ignore
+            document.getElementById("end-date").value = anio+"-"+mes+"-"+dia;
+            const _closeButton: InterfaceElement = document.getElementById('close');
+            const exportButton: InterfaceElement = document.getElementById('export-data');
+            let onPressed = false;
+            exportButton.addEventListener('click', async() => {
+                if(!onPressed){
+                    onPressed = true;
+                    this.dialogContainer.style.display = 'block';
+                    this.dialogContainer.innerHTML = `
+                    <div class="dialog_content" id="dialog-content">
+                        <div class="dialog">
+                            <div class="dialog_container padding_8">
+                                <div class="dialog_header">
+                                    <h2>Exportando...</h2>
+                                </div>
+
+                                <div class="dialog_message padding_8">
+                                    <div class="material_input">
+                                        <input type="text" id="export-total" class="input_filled" value="..." readonly>
+                                        <label for="export-total"><i class="fa-solid fa-cloud-arrow-down"></i>Obteniendo datos</label>
+                                    </div>
+
+                                    <div class="input_detail">
+                                        <label for="message-export"><i class="fa-solid fa-file-export"></i></label>
+                                        <p id="message-export" class="input_filled" readonly></p>
+                                    </div>
+                                </div>
+
+                                <div class="dialog_footer">
+                                    <button class="btn btn_primary" id="cancel">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                    inputObserver();
+                    const message1: InterfaceElement = document.getElementById("export-total");
+                    const message2: InterfaceElement = document.getElementById("message-export");
+                    const _closeButton: InterfaceElement = document.getElementById('cancel');
+                    _closeButton.onclick = () => {
+                        onPressed = false;
+                        const _dialog = document.getElementById('dialog-content');
+                        new CloseDialog().x(_dialog);
+                    };
+            
+                    const _values: InterfaceElement = {
+                        start: document.getElementById('start-date'),
+                        end: document.getElementById('end-date'),
+                        exportOption: document.getElementsByName('exportOption')
+                    }
+                    let rawToExport=(offset: any)=>{
+                        let rawExport = JSON.stringify({
+                            "filter": {
+                                "conditions": [
+                                    {
+                                        "property": "customer.id",
+                                        "operator": "=",
+                                        "value": `${customerId}`
+                                    },
+                                    {
+                                        "property": "notificationType.name",
+                                        "operator": "<>",
+                                        "value": `Otro`
+                                    },
+                                    {
+                                        "property": "notificationType.name",
+                                        "operator": "<>",
+                                        "value": `🔥 Fuego`
+                                    },
+                                    {
+                                        "property": "notificationType.name",
+                                        "operator": "<>",
+                                        "value": `🚨 Hombre Caído`
+                                    },
+                                    {
+                                        "property": "notificationType.name",
+                                        "operator": "<>",
+                                        "value": `🚪 Intrusión`
+                                    },
+                                    {
+                                        "property": "notificationType.name",
+                                        "operator": "<>",
+                                        "value": `🏚 Robo`
+                                    },
+                                    {
+                                        "property": "notificationType.name",
+                                        "operator": "<>",
+                                        "value": `Botón Pánico`
+                                    },
+                                    {
+                                        "property": "creationDate",
+                                        "operator": ">=",
+                                        "value": `${_values.start.value}`
+                                    },
+                                    {
+                                        "property": "creationDate",
+                                        "operator": "<=",
+                                        "value": `${_values.end.value}`
+                                    },
+                                    {
+                                        "property": "user.userType",
+                                        "operator": "=",
+                                        "value": `CUSTOMER`
+                                    }
+                                ],
+                            },
+                            sort: "-createdDate",
+                            limit: Config.limitExport,
+                            offset: offset,
+                            fetchPlan: 'full',
+                        });
+                        return rawExport;
+                    }
+                    let rawExport = rawToExport(0);
+                    const totalRegisters = await getFilterEntityCount("Notification", rawExport);
+                    if(totalRegisters === undefined){
+                        onPressed = false;
+                        const _dialog = document.getElementById('dialog-content');
+                        new CloseDialog().x(_dialog);
+                        alert("Ocurrió un error al exportar");
+                    }else if(totalRegisters===0){
+                        onPressed = false;
+                        const _dialog = document.getElementById('dialog-content');
+                        new CloseDialog().x(_dialog);
+                        alert("No hay ningún registro");  
+                    }else {
+                        message1.value = `0 / ${totalRegisters}`;
+                        const pages = Math.ceil(totalRegisters / Config.limitExport);
+                        let array = [];
+                        let events = [];
+                        let offset = 0;
+                        for(let i = 0; i < pages; i++){
+                            if(onPressed){
+                                rawExport = rawToExport(offset);
+                                array[i] = await getFilterEntityData("Notification", rawExport); //await getEvents();
+                                for(let y=0; y<array[i].length; y++){
+                                    events.push(array[i][y]);
+                                }
+                                message1.value = `${events.length} / ${totalRegisters}`;
+                                offset = Config.limitExport + (offset);
+                            }
+                        }
+                        
+                        for (let i = 0; i < _values.exportOption.length; i++) {
+                            let ele = _values.exportOption[i];
+                            if (ele.type = "radio") {
+                                if (ele.checked) {
+                                    message2.innerText = `Generando archivo ${ele.value},\nesto puede tomar un momento.`;
+                                    if (ele.value == "xls") {
+                                        // @ts-ignore
+                                        await exportBinnacleXls(events, _values.start.value, _values.end.value);
+                                    }
+                                    else if (ele.value == "csv") {
+                                        // @ts-ignore
+                                        await exportBinnacleCsv(events, _values.start.value, _values.end.value);
+                                    }
+                                    else if (ele.value == "pdf") {
+                                        // @ts-ignore
+                                        await exportBinnaclePdf(events, _values.start.value, _values.end.value);
+                                    }
+                                    const _dialog = document.getElementById('dialog-content');
+                                    new CloseDialog().x(_dialog);
+                                }
+                            }
+                        }
+                        onPressed = false;
+                    }
+                }
+                
+            });
+            _closeButton.onclick = () => {
+                onPressed = false;
+                const editor = document.getElementById('entity-editor-container');
+                new CloseDialog().x(editor);
+            };
+        });
+    };
 }

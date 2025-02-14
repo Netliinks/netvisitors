@@ -947,10 +947,10 @@ export class Employees {
             // @ts-ignore
             new QRious({
                 element: qr,
-                value: data.id,
+                value: data.id, // La URL o el texto
                 size: 250,
-                backgroundAlpha: 1,
-                foreground: "#1D4C82FF",
+                backgroundAlpha: 1, // 0 para fondo transparente
+                foreground: "#1D4C82FF", // Color del QR
                 level: "H", // Puede ser L,M,Q y H (L es el de menor nivel, H el mayor)
             });
             download(qr, data);
