@@ -95,7 +95,8 @@ export const exportVisitCsv = (ar, start, end) => {
             "DNI": `${visit.dni}`,
             "Fecha Creación": `${visit.creationDate}`,
             "Hora Creación": `${visit.creationTime}`,
-            "Usuario": `${visit.user?.firstName ?? ''} ${visit.user?.lastName ?? ''}`,
+            "Nombre Usuario": `${visit.user?.firstName ?? ''} ${visit.user?.lastName ?? ''}`,
+            "Usuario": `${visit.user?.username ?? ''}`,
             "Tipo": `${verifyUserType(visit.user.userType)}`,
             "Departamento": `${visit.department?.name ?? ''}`,
             "Estado": `${visit.visitState?.name ?? ''}`,
@@ -106,9 +107,11 @@ export const exportVisitCsv = (ar, start, end) => {
             "Fecha Ingreso": `${visit.ingressDate}`,
             "Hora Ingreso": `${visit.ingressTime}`,
             "Emitido Ingreso": `${visit.ingressIssuedId?.firstName ?? ''} ${visit.ingressIssuedId?.lastName ?? ''}`,
+            "Guardia Ingreso": `${visit.ingressIssuedId?.username ?? ''}`,
             "Fecha Salida": `${visit?.egressDate ?? ''}`,
             "Hora Salida": `${visit?.egressTime ?? ''}`,
             "Emitido Salida": `${visit.egressIssuedId?.firstName ?? ''} ${visit.egressIssuedId?.lastName ?? ''}`,
+            "Guardia Salida": `${visit.egressIssuedId?.username ?? ''}`,
             "Asunto": `${visit.reason.split("\n").join("(salto)")}`,
         };
         rows.push(obj);
@@ -127,7 +130,8 @@ export const exportVisitXls = (ar, start, end) => {
             "DNI": `${visit.dni}`,
             "Fecha Creación": `${visit.creationDate}`,
             "Hora Creación": `${visit.creationTime}`,
-            "Usuario": `${visit.user?.firstName ?? ''} ${visit.user?.lastName ?? ''}`,
+            "Nombre Usuario": `${visit.user?.firstName ?? ''} ${visit.user?.lastName ?? ''}`,
+            "Usuario": `${visit.user?.username ?? ''}`,
             "Tipo": `${verifyUserType(visit.user.userType)}`,
             "Departamento": `${visit.department?.name ?? ''}`,
             "Estado": `${visit.visitState?.name ?? ''}`,
@@ -138,9 +142,11 @@ export const exportVisitXls = (ar, start, end) => {
             "Fecha Ingreso": `${visit.ingressDate}`,
             "Hora Ingreso": `${visit.ingressTime}`,
             "Emitido Ingreso": `${visit.ingressIssuedId?.firstName ?? ''} ${visit.ingressIssuedId?.lastName ?? ''}`,
+            "Guardia Ingreso": `${visit.ingressIssuedId?.username ?? ''}`,
             "Fecha Salida": `${visit?.egressDate ?? ''}`,
             "Hora Salida": `${visit?.egressTime ?? ''}`,
             "Emitido Salida": `${visit.egressIssuedId?.firstName ?? ''} ${visit.egressIssuedId?.lastName ?? ''}`,
+            "Guardia Salida": `${visit.egressIssuedId?.username ?? ''}`,
             "Asunto": `${visit.reason.split("\n").join("(salto)")}`,
         };
         rows.push(obj);

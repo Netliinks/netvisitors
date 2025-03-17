@@ -111,7 +111,8 @@ export const exportReportCsv = (ar: any, start: any, end: any) => {
               "Título": `${note.title.split("\n").join("(salto)")}`,
               "Fecha": `${noteCreationDate}`,
               "Hora": `${noteCreationTime}`,
-              "Usuario": `${note.user?.firstName ?? ''} ${note.user?.lastName ?? ''}`,
+              "Nombre": `${note.user?.firstName ?? ''} ${note.user?.lastName ?? ''}`,
+              "Usuario": `${note.user?.username ?? ''}`,
               "Contenido": `${note.content.split("\n").join("(salto)")}`,
 
           }
@@ -135,7 +136,8 @@ export const exportReportXls = (ar: any, start: any, end: any) => {
               "Título": `${note.title.split("\n").join("(salto)")}`,
               "Fecha": `${noteCreationDate}`,
               "Hora": `${noteCreationTime}`,
-              "Usuario": `${note.user?.firstName ?? ''} ${note.user?.lastName ?? ''}`,
+              "Nombre": `${note.user?.firstName ?? ''} ${note.user?.lastName ?? ''}`,
+              "Usuario": `${note.user?.username ?? ''}`,
               "Contenido": `${note.content.split("\n").join("(salto)")}`,
 
           }

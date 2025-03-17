@@ -86,7 +86,8 @@ export const exportMarcationsCsv = (ar: any, start: any, end: any) => {
         //if(marcation.ingressDate >= start && marcation.ingressDate <= end){
             let obj = {
                 "DNI": `${marcation?.dni ?? ''}`,
-                "Usuario": `${marcation?.firstName ?? ''} ${marcation?.lastName ?? ''}`,
+                "Nombre": `${marcation?.firstName ?? ''} ${marcation?.lastName ?? ''}`,
+                "Usuario": `${marcation?.username ?? ''}`,
                 "Fecha": `${marcation.ingressDate}`,
                 "Primera Marcación": `${marcation.ingressTime}`,
                 "última Marcación": `${marcation?.egressTime ?? ''}`,
@@ -106,7 +107,8 @@ export const exportMarcationsXls = (ar: any, start: any, end: any) => {
         //if(marcation.ingressDate >= start && marcation.ingressDate <= end){
             let obj = {
                 "DNI": `${marcation?.dni ?? ''}`,
-                "Usuario": `${marcation?.firstName ?? ''} ${marcation?.lastName ?? ''}`,
+                "Nombre": `${marcation?.firstName ?? ''} ${marcation?.lastName ?? ''}`,
+                "Usuario": `${marcation?.username ?? ''}`,
                 "Fecha": `${marcation.ingressDate}`,
                 "Primera Marcación": `${marcation.ingressTime}`,
                 "última Marcación": `${marcation?.egressTime ?? ''}`,

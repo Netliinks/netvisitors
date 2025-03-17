@@ -117,13 +117,16 @@ export const exportMarcationsCsv = (ar: any, start: any, end: any) => {
         //if(marcation.ingressDate >= start && marcation.ingressDate <= end){
             let obj = {
                 "DNI": `${marcation.user?.dni ?? ''}`,
-                "Usuario": `${marcation.user?.firstName ?? ''} ${marcation.user?.lastName ?? ''}`,
+                "Nombre": `${marcation.user?.firstName ?? ''} ${marcation.user?.lastName ?? ''}`,
+                "Usuario": `${marcation.user?.username ?? ''}`,
                 "Fecha Ingreso": `${marcation.ingressDate}`,
                 "Hora Ingreso": `${marcation.ingressTime}`,
                 "Emitido Ingreso": `${marcation.ingressIssued?.firstName ?? ''} ${marcation.ingressIssued?.lastName ?? ''}`,
+                "Guardia Ingreso": `${marcation.ingressIssued?.username ?? ''}`,
                 "Fecha Salida": `${marcation?.egressDate ?? ''}`,
                 "Hora Salida": `${marcation?.egressTime ?? ''}`,
                 "Emitido Salida": `${marcation.egressIssued?.firstName ?? ''} ${marcation.egressIssued?.lastName ?? ''}`,
+                "Guardia Salida": `${marcation.egressIssued?.username ?? ''}`,
                 "Estado": `${marcation.marcationState?.name ?? ''}`,
               }
               rows.push(obj);
@@ -141,13 +144,16 @@ export const exportMarcationsXls = (ar: any, start: any, end: any) => {
         //if(marcation.ingressDate >= start && marcation.ingressDate <= end){
             let obj = {
                 "DNI": `${marcation.user?.dni ?? ''}`,
-                "Usuario": `${marcation.user?.firstName ?? ''} ${marcation.user?.lastName ?? ''}`,
+                "Nombre": `${marcation.user?.firstName ?? ''} ${marcation.user?.lastName ?? ''}`,
+                "Usuario": `${marcation.user?.username ?? ''}`,
                 "Fecha Ingreso": `${marcation.ingressDate}`,
                 "Hora Ingreso": `${marcation.ingressTime}`,
                 "Emitido Ingreso": `${marcation.ingressIssued?.firstName ?? ''} ${marcation.ingressIssued?.lastName ?? ''}`,
+                "Guardia Ingreso": `${marcation.ingressIssued?.username ?? ''}`,
                 "Fecha Salida": `${marcation?.egressDate ?? ''}`,
                 "Hora Salida": `${marcation?.egressTime ?? ''}`,
                 "Emitido Salida": `${marcation.egressIssued?.firstName ?? ''} ${marcation.egressIssued?.lastName ?? ''}`,
+                "Guardia Salida": `${marcation.egressIssued?.username ?? ''}`,
                 "Estado": `${marcation.marcationState?.name ?? ''}`,
               }
               rows.push(obj);
