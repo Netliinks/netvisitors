@@ -42,8 +42,12 @@ export const UIContentLayout = `
             Prim. Marc. <i class="fa-regular fa-filter"></i>
             </span></th>
 
-            <th class="thead_centered" width=120><span data-type="end">
-            Ult. Marc. <i class="fa-regular fa-filter"></i>
+            <th class="thead_centered" width=120><span data-type="end-date">
+            Fecha Ult. Marc. <i class="fa-regular fa-filter"></i>
+            </span></th>
+
+            <th class="thead_centered" width=120><span data-type="end-time">
+            Hora Ult. Marc. <i class="fa-regular fa-filter"></i>
             </span></th>
 
         </tr></thead>

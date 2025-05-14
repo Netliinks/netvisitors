@@ -160,6 +160,7 @@ export class AssistGestion {
                 <td>${assistControl.username}</td>
                 <td id="table-date">${assistControl.ingressDate}</td>
                 <td id="table-date">${assistControl.ingressTime}</td>
+                <td id="table-date">${assistControl.egressDate}</td>
                 <td id="table-date">${assistControl.egressTime}</td>
                 `;
                     tableBody.appendChild(row);
@@ -208,11 +209,6 @@ export class AssistGestion {
                             <label class="form_label" for="start-date">Desde:</label>
                             <input type="date" class="input_date input_date-start" id="start-date" name="start-date">
                         </div>
-        
-                        <div class="form_input">
-                            <label class="form_label" for="end-date">Hasta:</label>
-                            <input type="date" class="input_date input_date-end" id="end-date" name="end-date">
-                        </div>
 
                     </div>
 
@@ -254,7 +250,7 @@ export class AssistGestion {
                 // @ts-ignore
                 document.getElementById("start-date").value = anio + "-" + mes + "-" + dia;
                 // @ts-ignore
-                document.getElementById("end-date").value = anio + "-" + mes + "-" + dia;
+                //document.getElementById("end-date").value = anio+"-"+mes+"-"+dia;
                 const _closeButton = document.getElementById('close');
                 const exportButton = document.getElementById('export-data');
                 let onPressed = false;
@@ -300,7 +296,7 @@ export class AssistGestion {
                         };
                         const _values = {
                             start: document.getElementById('start-date'),
-                            end: document.getElementById('end-date'),
+                            //end: document.getElementById('end-date'),
                             exportOption: document.getElementsByName('exportOption')
                         };
                         let rawExport = JSON.stringify({
@@ -313,13 +309,8 @@ export class AssistGestion {
                                     },
                                     {
                                         "property": "ingressDate",
-                                        "operator": ">=",
+                                        "operator": "=",
                                         "value": `${_values.start.value}`
-                                    },
-                                    {
-                                        "property": "ingressDate",
-                                        "operator": "<=",
-                                        "value": `${_values.end.value}`
                                     }
                                 ],
                             },
@@ -349,15 +340,15 @@ export class AssistGestion {
                                         message2.innerText = `Generando archivo ${ele.value},\nesto puede tomar un momento.`;
                                         if (ele.value == "xls") {
                                             // @ts-ignore
-                                            await exportMarcationsXls(marcations, _values.start.value, _values.end.value);
+                                            await exportMarcationsXls(marcations, _values.start.value);
                                         }
                                         else if (ele.value == "csv") {
                                             // @ts-ignore
-                                            await exportMarcationsCsv(marcations, _values.start.value, _values.end.value);
+                                            await exportMarcationsCsv(marcations, _values.start.value);
                                         }
                                         else if (ele.value == "pdf") {
                                             // @ts-ignore
-                                            await exportMarcationsPdf(marcations, _values.start.value, _values.end.value);
+                                            await exportMarcationsPdf(marcations, _values.start.value);
                                         }
                                         const _dialog = document.getElementById('dialog-content');
                                         new CloseDialog().x(_dialog);

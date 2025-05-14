@@ -443,7 +443,9 @@ export const calculateGestionMarcation = (assistControl) => {
             "lastName": `${objects[0]?.user?.lastName ?? ''}`,
             "dni": `${objects[0]?.user?.dni ?? ''}`,
             "ingressDate": `${objects[0].ingressDate}`,
-            "egressDate": `${objects[0].egressDate}`,
+            "egressDate": `${fechaSalida != ""
+                ? objects[0].egressDate != undefined ? objects[0].egressDate : objects[0].ingressDate
+                : ""}`,
             "ingressTime": `${format(minDate)}`,
             "egressTime": `${fechaSalida}`,
             "username": `${objects[0]?.user?.username ?? ''}`,

@@ -1,4 +1,4 @@
-export const exportMarcationsPdf = (ar: any, start: any, end: any) => {
+export const exportMarcationsPdf = (ar: any, start: any) => {
     // @ts-ignore
     window.jsPDF = window.jspdf.jsPDF;
     // @ts-ignore
@@ -12,17 +12,18 @@ export const exportMarcationsPdf = (ar: any, start: any, end: any) => {
     doc.setFontSize(10)
     doc.setTextColor(0,0,0)
     doc.setFont(undefined, 'italic')
-    doc.text(130, 40, `Fecha: Desde ${start} Hasta ${end}`)
+    doc.text(160, 40, `Fecha: Hasta ${start}`)
     //construimos cabecera del csv
     doc.setFont(undefined, 'bold')
     doc.line(5, 45, 200, 45);
     doc.setFillColor(210,210,210)
     doc.rect(5, 45, 195, 10, 'F')
     doc.text(10, 50, "Nombre");
-    doc.text(50, 50, "DNI");
-    doc.text(90, 50, "Fecha");
-    doc.text(120, 50, "Primera Marcación");
-    doc.text(160, 50, "última Marcación"); 
+    doc.text(70, 50, "DNI");
+    doc.text(100, 50, "Fecha");
+    doc.text(120, 50, "Primera Marc.");
+    doc.text(150, 50, "Fecha Ult.");
+    doc.text(170, 50, "Hora Ult. Marc.");
     doc.line(5, 55, 200, 55);
     
     let row = 60
@@ -39,10 +40,11 @@ export const exportMarcationsPdf = (ar: any, start: any, end: any) => {
             doc.setFont(undefined, 'normal')
             doc.setTextColor(0,0,0)
             doc.text(10, row, `${marcation?.firstName ?? ''} ${marcation?.lastName ?? ''}`);
-            doc.text(50, row, `${marcation?.dni ?? ''}`);
-            doc.text(90, row, `${marcation.ingressDate}`);
+            doc.text(70, row, `${marcation?.dni ?? ''}`);
+            doc.text(100, row, `${marcation.ingressDate}`);
             doc.text(120, row, `${marcation.ingressTime}`);
-            doc.text(160, row, `${marcation?.egressTime ?? ''}`);
+            doc.text(150, row, `${marcation?.egressDate ?? ''}`);
+            doc.text(170, row, `${marcation?.egressTime ?? ''}`);
             row += 5
             let limitLineas = 51
             if(pagina == 1) limitLineas = 44
@@ -59,10 +61,11 @@ export const exportMarcationsPdf = (ar: any, start: any, end: any) => {
                 doc.setFillColor(210,210,210);
                 doc.rect(5, 15, 195, 10, 'F');
                 doc.text(10, 20, "Nombre");
-                doc.text(50, 20, "DNI");
-                doc.text(90, 20, "Fecha");
-                doc.text(120, 20, "Primera Marcación");
-                doc.text(160, 20, "última Marcación");  
+                doc.text(70, 20, "DNI");
+                doc.text(100, 20, "Fecha");
+                doc.text(120, 20, "Primera Marc.");
+                doc.text(150, 20, "Fecha Ult.");
+                doc.text(170, 20, "Hora Ult. Marc."); 
                 doc.line(5, 25, 200, 25);
                 doc.setTextColor(0,0,128)
                 doc.text(10, 290, `Página ${pagina}`)
@@ -90,7 +93,8 @@ export const exportMarcationsCsv = (ar: any, start: any, end: any) => {
                 "Usuario": `${marcation?.username ?? ''}`,
                 "Fecha": `${marcation.ingressDate}`,
                 "Primera Marcación": `${marcation.ingressTime}`,
-                "última Marcación": `${marcation?.egressTime ?? ''}`,
+                "Fecha Ult. Marc.": `${marcation?.egressDate ?? ''}`,
+                "Hora Ult. Marc.": `${marcation?.egressTime ?? ''}`,
               }
               rows.push(obj);
         //}
@@ -111,7 +115,8 @@ export const exportMarcationsXls = (ar: any, start: any, end: any) => {
                 "Usuario": `${marcation?.username ?? ''}`,
                 "Fecha": `${marcation.ingressDate}`,
                 "Primera Marcación": `${marcation.ingressTime}`,
-                "última Marcación": `${marcation?.egressTime ?? ''}`,
+                "Fecha Ult. Marc.": `${marcation?.egressDate ?? ''}`,
+                "Hora Ult. Marc.": `${marcation?.egressTime ?? ''}`,
               }
               rows.push(obj);
         //}
