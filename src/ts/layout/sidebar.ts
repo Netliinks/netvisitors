@@ -22,9 +22,165 @@ import { Binnacle } from "../views/binnacle/binnacle/BinnacleView.js";
 import { Vehiculars } from "../views/binnacle/vehiculars/Vehiculars.js"
 import { Sporadic } from "../views/assignment/tasks/sporadic/Sporadic.js";
 import { currentDateTime } from "../tools.js"
+import { Routines } from "../views/routine/Routines.js"
 export class Sidebar {
     private sidebarContainer: InterfaceElement = document.getElementById('app-sidebar')
     public render(): void {
+      const customerId = localStorage.getItem('customer_id');
+      if(customerId == "c7afa17d-0544-7351-f50f-b5630a6a93c7"){
+this.sidebarContainer.innerHTML = `
+    <div class="app_sidebar_container">
+      <div class="app_sidebar_container_menu">
+        <div class="sidebar_top">
+          <div class="sidebar_header"></div>
+
+          <div class="sidebar_items"  style="overflow-y:scroll; height: 100%; <!-- max-height: 45rem; --> ">
+            <div class="sidebar_item">
+              <span class="sidebar_item_label" id="render-dashboard">
+                <i class="fa-regular fa-chart-simple"></i> <div class="label">Dashboard</div>
+              </span>
+            </div>
+
+            <div class="sidebar_item">
+              <span class="sidebar_item_label">
+              <i class="fa-regular fa-user"></i> <div class="label">Usuarios</div>
+              </span>
+
+              <div class="sidebar_subitems">
+                <div class="sidebar_subitem" id="render-clients">
+                  <span class="sidebar_subitem_label">
+                    <i class="fa-regular fa-user-group"></i> <div class="label">Clientes</div>
+                  </span>
+                </div>
+
+                <div class="sidebar_subitem">
+                  <span class="sidebar_subitem_label" id="render-employees">
+                    <i class="fa-regular fa-users"></i> <div class="label">Empleados</div>
+                  </span>
+                </div>
+
+                <div class="sidebar_subitem">
+                  <span class="sidebar_subitem_label" id="render-contractors">
+                    <i class="fa-regular fa-briefcase"></i> <div class="label">Contratistas</div>
+                  </span>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="sidebar_item">
+              <span class="sidebar_item_label">
+              <i class="fa-regular fa-cabinet-filing"></i></i> <div class="label">Registros</div>
+              </span>
+
+              <div class="sidebar_subitems">
+                <div class="sidebar_subitem" id="render-notes">
+                  <span class="sidebar_subitem_label">
+                    <i class="fa-regular fa-notes"></i> <div class="label">Reportes</div>
+                  </span>
+                </div>
+
+                <div class="sidebar_subitem" id="render-visits">
+                  <span class="sidebar_subitem_label">
+                    <i class="fa-regular fa-user"></i> <div class="label">Visitas</div>
+                  </span>
+                </div>
+
+                <div class="sidebar_subitem" id="render-events">
+                  <span class="sidebar_subitem_label">
+                    <i class="fa-regular fa-megaphone"></i> <div class="label">Eventos</div>
+                  </span>
+                </div>
+
+                <div class="sidebar_subitem" id="render-binnacle">
+                  <span class="sidebar_subitem_label">
+                    <i class="fa-regular fa-book"></i> <div class="label">Bitácora</div>
+                  </span>
+                </div>
+
+                <div class="sidebar_subitem" id="render-vehiculars">
+                  <span class="sidebar_subitem_label">
+                    <i class="fa-regular fa-car"></i> <div class="label">Ingreso Vehicular</div>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sidebar_item" id="render-deparments">
+              <span class="sidebar_item_label">
+                <i class="fa-regular fa-building"></i> <div class="label">Departamentos</div>
+              </span>
+            </div>
+
+            <div class="sidebar_item" id="render-superusers">
+              <span class="sidebar_item_label">
+                <i class="fa-regular fa-shield"></i> <div class="label">Superusuarios</div>
+              </span>
+            </div>
+
+            <div class="sidebar_item">
+              <span class="sidebar_item_label">
+              <i class="fa-regular fa-calendar"></i></i> <div class="label">Asistencia</div>
+              </span>
+
+              <div class="sidebar_subitems">
+
+                <div class="sidebar_subitem" id="render-assistControl">
+                  <span class="sidebar_subitem_label">
+                    <i class="fa-regular fa-marker"></i> <div class="label">Control</div>
+                  </span>
+                </div>
+
+                <div class="sidebar_subitem" id="render-assistGestion">
+                  <span class="sidebar_subitem_label">
+                    <i class="fa-regular fa-list-alt"></i> <div class="label">Gestión</div>
+                  </span>
+                </div>
+
+              </div>
+            </div>
+            <div class="sidebar_item">
+              <span class="sidebar_item_label">
+              <i class="fa-regular fa-walkie-talkie"></i></i> <div class="label">Asignaciones</div>
+              </span>
+
+              <div class="sidebar_subitems">
+
+                <div class="sidebar_subitem" id="render-tasks">
+                  <span class="sidebar_subitem_label">
+                    <i class="fa-regular fa-walkie-talkie"></i> <div class="label">Consignas</div>
+                  </span>
+                  <div class="sidebar_subitems">
+                    <!--div class="sidebar_subitem" id="render-taskstime">
+                      <span class="sidebar_subitem_label">
+                        <i class="fa-regular fa-timer"></i><div class="label">Tiempo</div>
+                      </span>
+                    </div-->
+                    
+                    <div class="sidebar_subitem" id="render-sporadic">
+                      <span class="sidebar_subitem_label">
+                        <i class="fa-regular fa-clock"></i> <div class="label">Específicas</div>
+                      </span>
+                  </div>
+                  </div> 
+
+                </div>
+
+              </div>
+            </div>
+            <div class="sidebar_item">
+              <span class="sidebar_item_label" id="render-routine">
+                <i class="fa-regular fa-alarm-clock"></i></i> <div class="label">Rutinas</div>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+        this.getSidebarItems()
+        this.renders()
+      }else{
         this.sidebarContainer.innerHTML = `
     <div class="app_sidebar_container">
       <div class="app_sidebar_container_menu">
@@ -172,6 +328,7 @@ export class Sidebar {
   `
         this.getSidebarItems()
         this.renders()
+      }
     }
 
     public getSidebarItems = (): void => {
@@ -193,7 +350,6 @@ export class Sidebar {
                 sidebarSubitem.classList.add('isActive')
             })
         })
-
 
     }
 
@@ -251,6 +407,10 @@ export class Sidebar {
 
         document.getElementById('render-sporadic')?.addEventListener('click', () => {
           new Sporadic().render(Config.offset, Config.currentPage, "")
+        });
+
+        document.getElementById('render-routine')?.addEventListener('click', () => {
+          new Routines().render(Config.offset, Config.currentPage, "")
         });
     }
 }
