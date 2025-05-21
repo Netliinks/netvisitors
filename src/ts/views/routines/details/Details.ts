@@ -211,7 +211,6 @@ export class RoutineRegisters {
                     //let obsMessage = await this.obtainDelay(register);
                     let row = document.createElement('TR');
                     row.innerHTML += `
-                    <td>${calculateLine(register?.customer?.name, 40)}</td>
                     <td>${calculateLine(register?.routine?.name, 40)}</td>
                     <td>${calculateLine(register?.routineSchedule?.name, 40)}</td>
                     <td>${calculateLine(`${register?.user?.firstName ?? ''} ${register?.user?.lastName ?? ''}`, 40)}</td>
