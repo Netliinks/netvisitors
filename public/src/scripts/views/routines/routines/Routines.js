@@ -1,10 +1,10 @@
 // @filename: Routines.ts
-import { getUserInfo, getEntityData, getFilterEntityData, getFilterEntityCount, getFile } from "../../endpoints.js";
-import { drawTagsIntoTables, inputObserver, CloseDialog, filterDataByHeaderType, pageNumbers, fillBtnPagination } from "../../tools.js";
-import { Config } from "../../Configs.js";
+import { getUserInfo, getEntityData, getFilterEntityData, getFilterEntityCount, getFile } from "../../../endpoints.js";
+import { drawTagsIntoTables, inputObserver, CloseDialog, filterDataByHeaderType, pageNumbers, fillBtnPagination } from "../../../tools.js";
+import { Config } from "../../../Configs.js";
 import { tableLayout } from "./Layout.js";
 import { tableLayoutTemplate } from "./Template.js";
-import { exportRoutinePdf } from "../../exportFiles/extraRoutine.js";
+import { exportRoutinePdf } from "../../../exportFiles/extraRoutine.js";
 const tableRows = Config.tableRows;
 const currentPage = Config.currentPage;
 const customerId = localStorage.getItem('customer_id');

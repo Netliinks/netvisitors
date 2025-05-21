@@ -1,11 +1,11 @@
 // @filename: Routines.ts
-import { registerEntity, getUserInfo, getEntityData, updateEntity, getFilterEntityData, getFilterEntityCount, deleteEntity, getFile } from "../../endpoints.js";
-import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, filterDataByHeaderType, pageNumbers, fillBtnPagination, currentDateTime } from "../../tools.js";
-import { Config } from "../../Configs.js";
+import { registerEntity, getUserInfo, getEntityData, updateEntity, getFilterEntityData, getFilterEntityCount, deleteEntity, getFile } from "../../../endpoints.js";
+import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, filterDataByHeaderType, pageNumbers, fillBtnPagination, currentDateTime } from "../../../tools.js";
+import { Config } from "../../../Configs.js";
 import { tableLayout } from "./Layout.js";
 import { tableLayoutTemplate } from "./Template.js";
-import { exportRoutinePdf } from "../../exportFiles/extraRoutine.js";
-import { InterfaceElement } from "../../types.js";
+import { exportRoutinePdf } from "../../../exportFiles/extraRoutine.js";
+import { InterfaceElement } from "../../../types.js";
 const tableRows = Config.tableRows;
 const currentPage = Config.currentPage;
 const customerId = localStorage.getItem('customer_id');
