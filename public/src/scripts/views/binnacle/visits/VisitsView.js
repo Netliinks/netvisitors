@@ -233,7 +233,7 @@ export class Visits {
                 const egressGuardName = document.getElementById('egress-guard-name');
                 egressGuardName.value = `${entityData?.egressIssuedId?.firstName ?? ''} ${entityData?.egressIssuedId?.lastName ?? ''}`;
                 //console.log(entityData.citadel.name)
-                if (entityData?.image !== undefined || entityData?.camera1 !== undefined || entityData?.camera2 !== undefined || entityData?.camera3 !== undefined || entityData?.camera4 !== undefined) {
+                if (entityData?.image !== undefined || entityData?.image3 !== undefined || entityData?.camera1 !== undefined || entityData?.camera2 !== undefined || entityData?.camera3 !== undefined || entityData?.camera4 !== undefined) {
                     let images = [];
                     if (entityData?.image !== undefined) {
                         let details = {
@@ -241,6 +241,15 @@ export class Visits {
                             "description": `Adjunto - ${entityData?.dni ?? ''}`,
                             "icon": "mobile",
                             "id": "image"
+                        };
+                        images.push(details);
+                    }
+                    if (entityData?.image3 !== undefined) {
+                        let details = {
+                            "image": `${await getFile(entityData.image3)}`,
+                            "description": `Adjunto 2 - ${entityData?.dni ?? ''}`,
+                            "icon": "mobile",
+                            "id": "image3"
                         };
                         images.push(details);
                     }
