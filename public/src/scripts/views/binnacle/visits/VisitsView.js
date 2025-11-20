@@ -208,6 +208,8 @@ export class Visits {
                 visitAutorizedBy.value = entityData?.authorizer;
                 const visitStatus = document.getElementById('visit-status');
                 visitStatus.innerText = entityData.visitState.name;
+                const vehicularPlate = document.getElementById('vehicular-plate');
+                vehicularPlate.value = entityData?.vehicularPlate ?? "";
                 const visitCitadel = document.getElementById('visit-citadel');
                 visitCitadel.value = entityData.citadel?.description;
                 const visitCitadelID = document.getElementById('visit-citadelid');

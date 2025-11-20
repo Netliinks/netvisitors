@@ -230,6 +230,9 @@ export class Visits {
             const visitStatus: InterfaceElement = document.getElementById('visit-status')
             visitStatus.innerText = entityData.visitState.name
 
+            const vehicularPlate: InterfaceElement = document.getElementById('vehicular-plate')
+            vehicularPlate.value = entityData?.vehicularPlate ?? ""
+
             const visitCitadel: InterfaceElement = document.getElementById('visit-citadel')
             visitCitadel.value = entityData.citadel?.description
 

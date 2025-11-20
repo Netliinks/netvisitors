@@ -99,6 +99,11 @@ export const UIRightSidebar = `
   </div>
 
   <div class="material_input">
+    <input type="text" id="vehicular-plate" autocomplete="none" class="input_filled" disabled>
+    <label for="vehicular-plate"><i class="fa-solid fa-car"></i> Placa vehicular</label>
+  </div>
+
+  <div class="material_input">
     <input type="text" id="visit-citadel" autocomplete="none" class="input_filled">
     <label for="visit-citadel"><i class="fa-solid fa-buildings"></i> Ciudadela</label>
   </div>
