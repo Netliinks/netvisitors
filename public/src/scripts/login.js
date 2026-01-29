@@ -74,9 +74,13 @@ export class SignIn {
                     }
                 });
                 let user = await getFilterEntityData("User", raw);
+                let username = user[0]?.username ?? '';
+                if (username.includes('&')) {
+                    username = username.replace('&', '%26');
+                }
                 const reqOptions = {
                     method: reqOP.method,
-                    body: `grant_type=password&username=${user[0]?.username}&password=${password}`,
+                    body: `grant_type=password&username=${username}&password=${password}`,
                     headers: connectionHeader
                 };
                 fetch(reqOP.url, reqOptions)
@@ -98,11 +102,11 @@ export class SignIn {
                         localStorage.removeItem('password');
                         localStorage.removeItem('access_token');
                         localStorage.setItem('access_token', connectionData.token);
-                        window.location.reload();
+                        //window.location.reload()
                     }
                 }).catch((e) => {
                     console.log(e);
-                    this.signOut();
+                    //this.signOut()
                 });
             }
             else {

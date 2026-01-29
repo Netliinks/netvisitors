@@ -14,6 +14,7 @@ export const _userAgent = navigator.userAgent;
 // ===================================================
 let headers = new Headers();
 headers.append('Authorization', `Bearer ${token}`);
+console.log(token);
 headers.append('Content-Type', "application/json");
 headers.append('Cookie', "JSESSIONID=CDD208A868EAABD1F523BB6F3C8946AF");
 // ===================================================
