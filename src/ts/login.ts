@@ -109,7 +109,7 @@ export class SignIn {
                         localStorage.removeItem('password')
                         localStorage.removeItem('access_token')
                         localStorage.setItem('access_token', connectionData.token)
-                        //window.location.reload()
+                        window.location.reload()
                     }
                 }).catch((e: any) => {
                     console.log(e)
