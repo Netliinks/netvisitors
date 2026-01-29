@@ -113,7 +113,7 @@ export class SignIn {
                     }
                 }).catch((e: any) => {
                     console.log(e)
-                    //this.signOut()
+                    this.signOut()
                 })
             }else{
                 if(customerId == null){
