@@ -36,11 +36,11 @@ this.sidebarContainer.innerHTML = `
           <div class="sidebar_header"></div>
 
           <div class="sidebar_items"  style="overflow-y:scroll; height: 100%; <!-- max-height: 45rem; --> ">
-            <div class="sidebar_item">
+            <!-- <div class="sidebar_item">
               <span class="sidebar_item_label" id="render-dashboard">
                 <i class="fa-regular fa-chart-simple"></i> <div class="label">Dashboard</div>
               </span>
-            </div>
+            </div> -->
 
             <div class="sidebar_item">
               <span class="sidebar_item_label">
@@ -207,11 +207,11 @@ this.sidebarContainer.innerHTML = `
           <div class="sidebar_header"></div>
 
           <div class="sidebar_items"  style="overflow-y:scroll; height: 100%; <!-- max-height: 45rem; --> ">
-            <div class="sidebar_item">
+            <!-- <div class="sidebar_item">
               <span class="sidebar_item_label" id="render-dashboard">
                 <i class="fa-regular fa-chart-simple"></i> <div class="label">Dashboard</div>
               </span>
-            </div>
+            </div> -->
 
             <div class="sidebar_item">
               <span class="sidebar_item_label">
@@ -375,11 +375,11 @@ this.sidebarContainer.innerHTML = `
     }
 
     public renders(): void {
-        document.getElementById('render-dashboard')?.addEventListener('click', () => {
+        /*document.getElementById('render-dashboard')?.addEventListener('click', () => {
           // @ts-ignore
           clearTimeout(Config.timeOut);
             new Dashboard().render()
-        })
+        })*/
 
         document.getElementById('render-clients')?.addEventListener('click', (): void => {
           // @ts-ignore

@@ -10,6 +10,8 @@ import { SignIn } from "../login.js"
 import { InterfaceElement } from "../types.js"
 import { Sidebar } from "./sidebar.js"
 import { ChangePassword } from "./changePassword/changePassword.js"
+import { Visits } from "../views/binnacle/visits/VisitsView.js"
+import { Config } from "../Configs.js"
 
 export class RenderApplicationUI {
     private loginContainer: InterfaceElement = document.getElementById('login-container')
@@ -25,7 +27,8 @@ export class RenderApplicationUI {
 
         this.renderTopbar()
         new Sidebar().render()
-        new Dashboard().render()
+        //new Dashboard().render()
+        new Visits().render(Config.offset, Config.currentPage, "")
     }
 
     private async renderTopbar(): Promise<void> {
