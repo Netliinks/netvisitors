@@ -7,7 +7,7 @@ import { Config } from "./Configs.js"
 import { getUserInfo, _userAgent, getEntityData, getEntitiesData, updateEntity, getFilterEntityData } from "./endpoints.js"
 import { RenderApplicationUI } from "./layout/interface.js"
 import { InterfaceElement, Request } from "./types.js"
-import { registryPlataform } from "./tools.js"
+import { registryPlataform, searchUniversalValue } from "./tools.js"
 
 const loginContainer: InterfaceElement = document.getElementById('login-container')
 const app: InterfaceElement = document.getElementById('app')
@@ -30,11 +30,14 @@ const reqOP: Request = {
 export class SignIn {
     public async checkSignIn(): Promise<void> {
         const accessToken = localStorage.getItem('access_token')
+        const userId = localStorage.getItem('userId')
 
         const checkUser = async (): Promise<void> => {
-            let currentUser = await getUserInfo()
+            //let currentUser = await getUserInfo()
+            let currentUsers = await searchUniversalValue(userId === 'consulta' ? 'username' : 'id','=',`${userId}`,'User')
+            let currentUser = currentUsers[0];
             const customerId: any = localStorage.getItem('customer_id')
-            if (currentUser.error === 'invalid_token') {
+            if (currentUsers.error === 'invalid_token') {
                 this.signOut()
             }
             if(currentUser.username === "consulta"){
@@ -103,7 +106,9 @@ export class SignIn {
                             refreshToken: res.refresh_token,
                             scope: res.scope,
                             tokenType: res.token_type
-                        };   
+                        };
+                        localStorage.removeItem('userId')
+                        localStorage.setItem('userId', user[0]?.id)
                         await registryPlataform(user[0]?.id)
                         localStorage.removeItem('email')
                         localStorage.removeItem('password')
@@ -117,7 +122,7 @@ export class SignIn {
                 })
             }else{
                 if(customerId == null){
-                    let user = await getEntityData('User', currentUser.attributes.id)
+                    let user = await getEntityData('User', currentUser.id)
                     if(user.customer?.id != null || user.customer?.id != undefined){
                         localStorage.setItem('customer_id', user.customer?.id)
                         window.location.reload()
@@ -126,16 +131,16 @@ export class SignIn {
                         alert('Usuario no tiene asignado empresa.')
                     }    
                 }
-                if (currentUser.attributes.isSuper !== true) {
+                if (currentUser.isSuper !== true) {
                     this.signOut();
                     alert('Usuario no es superusuario.')
                 }
-                if (currentUser.attributes.userType !== 'CUSTOMER') {
+                if (currentUser.userType !== 'CUSTOMER') {
                     this.signOut();
                     alert('Usuario no es tipo cliente.')
                 }
-                if (currentUser.attributes.verifiedSuper === true) {
-                    let user = await getEntityData('User', currentUser.attributes.id);
+                if (currentUser.verifiedSuper === true) {
+                    let user = await getEntityData('User', currentUser.id);
                     let rawCustomer = JSON.stringify({
                         "filter": {
                             "conditions": [
@@ -169,7 +174,7 @@ export class SignIn {
                         this.signOut();
                     }
                 }else{
-                    this.showVerified(currentUser.attributes.id, currentUser.attributes?.hashSuper)
+                    this.showVerified(currentUser.id, currentUser?.hashSuper)
                 }
             }
         }
@@ -257,6 +262,7 @@ export class SignIn {
         })
 
         async function connect(user: string, password: string): Promise<void> {
+            localStorage.setItem('userId', "consulta")
             const reqOptions: {} = {
                 method: reqOP.method,
                 body: `grant_type=password&username=consulta&password=consulta`,
@@ -292,6 +298,7 @@ export class SignIn {
         localStorage.removeItem('customer_id')
         localStorage.removeItem('email')
         localStorage.removeItem('password')
+        localStorage.removeItem('userId')
         // @ts-ignore
         clearTimeout(Config.timeOut);
         this.checkSignIn()
