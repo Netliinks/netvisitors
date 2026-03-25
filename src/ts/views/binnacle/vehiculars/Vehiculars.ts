@@ -293,7 +293,7 @@ export class Vehiculars {
             _values.endGuardID.value = markingData.egressIssued?.username ?? '';
             // @ts-ignore
             _values.endGuardName.value = markingData.egressIssued?.firstName ?? '' + ' ' + markingData.egressIssued?.lastName ?? '';
-            if (markingData?.image !== undefined || markingData?.image2 !== undefined || markingData?.image3 !== undefined) {
+            if (markingData?.image !== undefined || markingData?.image2 !== undefined || markingData?.image3 !== undefined || markingData?.image4 !== undefined || markingData?.image5 !== undefined || markingData?.image6 !== undefined) {
                 let images = [];
                 if (markingData?.image !== undefined) {
                     let details = {
@@ -319,6 +319,33 @@ export class Vehiculars {
                         "description": `Adjunto 3 - ${markingData?.licensePlate ?? ''}`,
                         "icon": "mobile",
                         "id": "image3"
+                    };
+                    images.push(details);
+                }
+                if (markingData?.image4 !== undefined) {
+                    let details = {
+                        "image": `${await getFile(markingData.image4)}`,
+                        "description": `Adjunto 4 - ${markingData?.licensePlate ?? ''}`,
+                        "icon": "mobile",
+                        "id": "image4"
+                    };
+                    images.push(details);
+                }
+                if (markingData?.image5 !== undefined) {
+                    let details = {
+                        "image": `${await getFile(markingData.image5)}`,
+                        "description": `Adjunto 5 - ${markingData?.licensePlate ?? ''}`,
+                        "icon": "mobile",
+                        "id": "image5"
+                    };
+                    images.push(details);
+                }
+                if (markingData?.image6 !== undefined) {
+                    let details = {
+                        "image": `${await getFile(markingData.image6)}`,
+                        "description": `Adjunto 6 - ${markingData?.licensePlate ?? ''}`,
+                        "icon": "mobile",
+                        "id": "image6"
                     };
                     images.push(details);
                 }
