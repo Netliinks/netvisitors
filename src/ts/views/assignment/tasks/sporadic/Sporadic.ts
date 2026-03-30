@@ -358,6 +358,9 @@ export class Sporadic {
                     "user": {
                         "id": `${_userInfo.attributes.id}`
                     },
+                    "business": {
+                        "id": `${currentUser.business.id}`
+                    },
                     "customer": {
                         "id": `${customerId}`
                     },
