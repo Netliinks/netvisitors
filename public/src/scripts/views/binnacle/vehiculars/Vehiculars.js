@@ -251,7 +251,7 @@ export class Vehiculars {
                     endGuardID: document.getElementById('marking-end-guard-id'),
                     endGuardName: document.getElementById('marking-end-guard-name')
                 };
-                _values.status.innerText = markingData.visitState.name;
+                _values.status.innerText = markingData?.visitState?.name == 'Emergente' ? 'Iniciado' : markingData?.visitState?.name;
                 _values.name.value = markingData?.driver ?? '';
                 _values.dni.value = markingData?.dni ?? '';
                 _values.license.value = markingData?.licensePlate ?? '';
