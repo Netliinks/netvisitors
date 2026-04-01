@@ -150,7 +150,7 @@ export class Visits {
                     <td id="table-date">${visit.creationDate}</td>
                     <td id="table-time" style="white-space: nowrap">${visit.creationTime}</td>
                     <td>${verifyUserType(visit.user.userType)}</td>
-                    <td class="tag"><span>${visit.visitState.name}</span></td>
+                    <td class="tag"><span>${visit?.visitState?.name == 'Emergente' ? 'Iniciado' : visit?.visitState?.name}</span></td>
 
                     <td>
                         <button class="button" id="entity-details" data-entityId="${visit.id}">
@@ -207,7 +207,7 @@ export class Visits {
                 const visitAutorizedBy = document.getElementById('visit-authorizedby');
                 visitAutorizedBy.value = entityData?.authorizer;
                 const visitStatus = document.getElementById('visit-status');
-                visitStatus.innerText = entityData.visitState.name;
+                visitStatus.innerText = entityData?.visitState?.name == 'Emergente' ? 'Iniciado' : entityData?.visitState?.name;
                 const vehicularPlate = document.getElementById('vehicular-plate');
                 vehicularPlate.value = entityData?.vehicularPlate ?? "";
                 const visitCitadel = document.getElementById('visit-citadel');

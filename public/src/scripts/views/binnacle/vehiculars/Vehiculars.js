@@ -139,7 +139,7 @@ export class Vehiculars {
                 <td>${vehicular.driver}</td>
                 <td id="table-date">${vehicular.ingressDate} ${vehicular.ingressTime}</td>
                 <td id="table-date">${vehicular?.egressDate ?? ''} ${vehicular?.egressTime ?? ''}</td>
-                <td class="tag"><span>${vehicular.visitState.name}</span></td>
+                <td class="tag"><span>${vehicular?.visitState?.name == 'Emergente' ? 'Iniciado' : vehicular?.visitState?.name}</span></td>
 
                 <td>
                     <button class="button" id="entity-details" data-entityId="${vehicular.id}">
