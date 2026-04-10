@@ -206,7 +206,7 @@ export class Events {
                 row.innerHTML += `
                     <td>${calculateLine(event?.title ?? '', 40)}</td>
                     <td>${calculateLine(event?.description ?? '', 40)}</td>
-                    <td>${event?.user?.username ?? ''}</td>
+                    <td>[${event?.user?.username ?? ''}] ${event?.user?.firstName ?? ''} ${event?.user?.lastName ?? ''}</td>
                     <td id="table-date">${event.creationDate}</td>
                     <td>
                         <button class="button" id="entity-details" data-entityId="${event.id}">

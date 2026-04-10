@@ -147,7 +147,7 @@ export class Notes {
                 row.innerHTML += `
                     <td>${calculateLine(note?.title ?? '', 40)}</td>
                     <td>${calculateLine(note?.content ?? '', 40)}</td>
-                    <td>${note?.user?.username ?? ''}</td>
+                    <td>[${note?.user?.username ?? ''}] ${note?.user?.firstName ?? ''} ${note?.user?.lastName ?? ''}</td>
                     <td id="table-date">${noteCreationDate}</td>
                     <td>
                         <button class="button" id="entity-details" data-entityId="${note.id}">

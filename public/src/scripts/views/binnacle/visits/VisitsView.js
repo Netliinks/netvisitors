@@ -146,7 +146,7 @@ export class Visits {
                     row.innerHTML += `
                     <td style="white-space: nowrap">${visit.firstName} ${visit.firstLastName} ${visit.secondLastName}</td>
                     <td>${visit.dni}</td>
-                    <td>${visit?.user?.username ?? ''}</td>
+                    <td>[${visit?.user?.username ?? ''}] ${visit?.user?.firstName ?? ''} ${visit?.user?.lastName ?? ''}</td>
                     <td id="table-date">${visit.creationDate}</td>
                     <td id="table-time" style="white-space: nowrap">${visit.creationTime}</td>
                     <td>${verifyUserType(visit.user.userType)}</td>
