@@ -55,11 +55,6 @@ const getEvents = async () => {
                     "property": "notificationType.name",
                     "operator": "<>",
                     "value": `Rutina`
-                },
-                {
-                    "property": "user.userType",
-                    "operator": "=",
-                    "value": `CUSTOMER`
                 }
             ],
         },
@@ -121,11 +116,6 @@ const getEvents = async () => {
                         "property": "notificationType.name",
                         "operator": "<>",
                         "value": `Rutina`
-                    },
-                    {
-                        "property": "user.userType",
-                        "operator": "=",
-                        "value": `CUSTOMER`
                     }
                 ]
             },

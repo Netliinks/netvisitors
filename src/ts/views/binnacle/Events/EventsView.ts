@@ -58,11 +58,6 @@ const getEvents = async (): Promise<void> => {
                   "property": "notificationType.name",
                   "operator": "<>",
                   "value": `Rutina`
-              },
-              {
-                "property": "user.userType",
-                "operator": "=",
-                "value": `CUSTOMER`
               }
             ],
             
@@ -126,11 +121,6 @@ const getEvents = async (): Promise<void> => {
                       "property": "notificationType.name",
                       "operator": "<>",
                       "value": `Rutina`
-                  },
-                  {
-                    "property": "user.userType",
-                    "operator": "=",
-                    "value": `CUSTOMER`
                   }
                 ]
               },

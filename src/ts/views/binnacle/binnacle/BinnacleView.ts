@@ -68,9 +68,14 @@ const getEvents = async (): Promise<void> => {
                 "value": `Botón Pánico`
               },
               {
-                "property": "user.userType",
-                "operator": "=",
-                "value": `CUSTOMER`
+                "property": "notificationType.name",
+                "operator": "<>",
+                "value": `Consigna`
+              },
+              {
+                "property": "notificationType.name",
+                "operator": "<>",
+                "value": `Rutina`
               }
             ],
             
@@ -139,11 +144,6 @@ const getEvents = async (): Promise<void> => {
                     "property": "notificationType.name",
                     "operator": "<>",
                     "value": `Botón Pánico`
-                  },
-                  {
-                    "property": "user.userType",
-                    "operator": "=",
-                    "value": `CUSTOMER`
                   }
                 ]
               },

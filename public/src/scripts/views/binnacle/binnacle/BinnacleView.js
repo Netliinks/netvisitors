@@ -65,9 +65,14 @@ const getEvents = async () => {
                     "value": `Botón Pánico`
                 },
                 {
-                    "property": "user.userType",
-                    "operator": "=",
-                    "value": `CUSTOMER`
+                    "property": "notificationType.name",
+                    "operator": "<>",
+                    "value": `Consigna`
+                },
+                {
+                    "property": "notificationType.name",
+                    "operator": "<>",
+                    "value": `Rutina`
                 }
             ],
         },
@@ -134,11 +139,6 @@ const getEvents = async () => {
                         "property": "notificationType.name",
                         "operator": "<>",
                         "value": `Botón Pánico`
-                    },
-                    {
-                        "property": "user.userType",
-                        "operator": "=",
-                        "value": `CUSTOMER`
                     }
                 ]
             },
