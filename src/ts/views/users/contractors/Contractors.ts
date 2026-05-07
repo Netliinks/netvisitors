@@ -1,7 +1,7 @@
 // @filename: Contractors.ts
 
 import { deleteEntity, getEntityData, registerEntity, setPassword, setUserRole, updateEntity, getUserInfo, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js"
-import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyEmail, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalValue } from "../../../tools.js"
+import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyEmail, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalValue, sleep, generateFileSimpleXls } from "../../../tools.js"
 import { InterfaceElement, InterfaceElementCollection } from "../../../types.js"
 import { Config } from "../../../Configs.js"
 import { tableLayout } from "./Layout.js"
@@ -1003,29 +1003,19 @@ export class Contractors {
 
     private export = (): void => {
         const exportUsers: InterfaceElement = document.getElementById('export-entities');
-        exportUsers.addEventListener('click', async() => {
+        exportUsers.addEventListener('click', async () => {
             this.dialogContainer.style.display = 'block';
-            this.dialogContainer.innerHTML = `
+                this.dialogContainer.innerHTML = `
                 <div class="dialog_content" id="dialog-content">
                     <div class="dialog">
                         <div class="dialog_container padding_8">
                             <div class="dialog_header">
-                                <h2>Seleccione un tipo</h2>
+                                <h2>Antes de exportar</h2>
                             </div>
 
                             <div class="dialog_message padding_8">
-                                <div class="form_group">
-                                    <label for="exportCsv">
-                                        <input type="radio" id="exportCsv" name="exportOption" value="csv" /> CSV
-                                    </label>
-
-                                    <label for="exportXls">
-                                        <input type="radio" id="exportXls" name="exportOption" value="xls" checked /> XLS
-                                    </label>
-
-                                    <label for="exportPdf">
-                                        <input type="radio" id="exportPdf" name="exportOption" value="pdf" /> PDF
-                                    </label>
+                                <div class="input_checkbox">
+                                    <label><input type="checkbox" class="checkbox" id="check-allCustomer"> Descargar contratistas de todas las empresas</label>
                                 </div>
                             </div>
 
@@ -1037,62 +1027,138 @@ export class Contractors {
                     </div>
                 </div>
             `;
-            inputObserver();
-            const _closeButton: InterfaceElement = document.getElementById('cancel');
-            const exportButton: InterfaceElement = document.getElementById('export-data');
-            const _dialog: InterfaceElement = document.getElementById('dialog-content');
-            exportButton.addEventListener('click', async() => {
-                const _values: any = {
-                    exportOption: document.getElementsByName('exportOption')
-                }
-                let rawExport = JSON.stringify({
-                    "filter": {
-                        "conditions": [
-                          {
-                            "property": "customer.id",
-                            "operator": "=",
-                            "value": `${customerId}`
-                          },
-                          {
-                            "property": "isSuper",
-                            "operator": "=",
-                            "value": `${false}`
-                          },
-                          {
-                            "property": "userType",
-                            "operator": "=",
-                            "value": `CONTRACTOR`
-                          }
-                        ],
-                        
-                    }, 
-                    sort: "-createdDate",
-                    fetchPlan: 'full',
-                    
-                })
-                const users: any = await getFilterEntityData("User", rawExport) //await getUsers()
-                for (let i = 0; i < _values.exportOption.length; i++) {
-                    let ele: any = _values.exportOption[i]
-                    if (ele.type = "radio") {
-    
-                        if (ele.checked){
-                            if(ele.value == "xls"){
-                                // @ts-ignore
-                                exportContractorXls(users)
-                            }else if(ele.value == "csv"){
-                                // @ts-ignore
-                                exportContractorCsv(users)
-                            }else if(ele.value == "pdf"){
-                                // @ts-ignore
-                                exportContractorPdf(users)
+                inputObserver();
+                const _closeButton: InterfaceElement = document.getElementById('cancel');
+                const exportButton: InterfaceElement = document.getElementById('export-data');
+                const _dialog: InterfaceElement = document.getElementById('dialog-content');
+                const _checkAllCustomer: InterfaceElement = document.getElementById('check-allCustomer');
+                let onPressed = false;
+                exportButton.addEventListener('click', async () => {
+                    if(!onPressed){
+                        onPressed = true;
+                        this.dialogContainer.style.display = 'block';
+                        this.dialogContainer.innerHTML = `
+                        <div class="dialog_content" id="dialog-content">
+                            <div class="dialog">
+                                <div class="dialog_container padding_8">
+                                    <div class="dialog_header">
+                                        <h2>Exportando...</h2>
+                                    </div>
+
+                                    <div class="dialog_message padding_8">
+                                        <div class="material_input">
+                                            <input type="text" id="export-total" class="input_filled" value="..." readonly>
+                                            <label for="export-total"><i class="fa-solid fa-cloud-arrow-down"></i>Obteniendo datos</label>
+                                        </div>
+
+                                        <div class="input_detail">
+                                            <label for="message-export"><i class="fa-solid fa-file-export"></i></label>
+                                            <p id="message-export" class="input_filled" readonly></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="dialog_footer">
+                                        <button class="btn btn_primary" id="cancel">Cancelar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                        inputObserver();
+                        const message1: InterfaceElement = document.getElementById("export-total");
+                        const message2: InterfaceElement = document.getElementById("message-export");
+                        const _closeButton: InterfaceElement = document.getElementById('cancel');
+                        _closeButton.onclick = () => {
+                            onPressed = false;
+                            const _dialog = document.getElementById('dialog-content');
+                            new CloseDialog().x(_dialog);
+                        };
+                        let rawToExport=(offset: number)=>{
+                            let rawExport = JSON.stringify({
+                                "filter": {
+                                    "conditions": [
+                                        {
+                                            "property": `${_checkAllCustomer.checked ? 'business.id' : 'customer.id'}`,
+                                            "operator": "=",
+                                            "value": `${_checkAllCustomer.checked ? currentUserInfo.business.id : customerId}`
+                                        },
+                                        {
+                                            "property": "business.state.name",
+                                            "operator": "=",
+                                            "value": `Enabled`
+                                        },
+                                        {
+                                            "property": "state.name",
+                                            "operator": "=",
+                                            "value": `Enabled`
+                                        },
+                                        {
+                                            "property": "userType",
+                                            "operator": "=",
+                                            "value": "CONTRACTOR"
+                                        },
+                                        {
+                                            "property": "isSuper",
+                                            "operator": "=",
+                                            "value": false
+                                        }
+                                    ],
+                                },
+                                sort: `+customer.name`,
+                                limit: Config.limitExport,
+                                offset: offset,
+                                fetchPlan: 'full'
+                            });
+                            return rawExport;
+                        }
+                        let rawExport = rawToExport(0);
+                        const totalRegisters = await getFilterEntityCount("User", rawExport);
+                        if(totalRegisters === undefined){
+                            onPressed = false;
+                            const _dialog = document.getElementById('dialog-content');
+                            new CloseDialog().x(_dialog);
+                            alert("Ocurrió un error al exportar");
+                        }else if(totalRegisters===0){
+                            onPressed = false;
+                            const _dialog = document.getElementById('dialog-content');
+                            new CloseDialog().x(_dialog);
+                            alert("No hay ningún registro");  
+                        }else {
+                            message1.value = `0 / ${totalRegisters}`;
+                            const pages = Math.ceil(totalRegisters / Config.limitExport);
+                            let array = [];
+                            let users = [];
+                            let offset = 0;
+                            for(let i = 0; i < pages; i++){
+                                if(onPressed){
+                                    rawExport = rawToExport(offset);
+                                    array[i] = await getFilterEntityData("User", rawExport); //await getEvents();
+                                    for(let y=0; y<array[i].length; y++){
+                                        users.push({
+                                            "Empresa":array[i][y]["customer"]["name"] ?? '',
+                                            "Username":array[i][y]["username"] ?? '',
+                                            "Nombre":`${array[i][y]["firstName"] ?? ''}`,
+                                            "Apellido 1":`${array[i][y]["lastName"] ?? ''}`,
+                                            "Apellido 2":`${array[i][y]["secondLastName"] ?? ''}`,
+                                            "Cédula":array[i][y]["dni"] ?? '',
+                                        });
+                                    }
+                                    message1.value = `${users.length} / ${totalRegisters}`;
+                                    offset = Config.limitExport + (offset);
+                                    await sleep(Config.timeOutExport);
+                                }
                             }
+                        
+                            generateFileSimpleXls(users,"Contratista","csv");
+                            const _dialog = document.getElementById('dialog-content');
+                            new CloseDialog().x(_dialog);
+                            onPressed = false;
                         }
                     }
-                }
-            })
-            _closeButton.onclick = () => {
-                new CloseDialog().x(_dialog);
-            };
+                });
+                _closeButton.onclick = () => {
+                    new CloseDialog().x(_dialog);
+                };
         });
     };
 

@@ -14,5 +14,6 @@ export const Config = {
     timeReolad: 30000,
     timeOut: null,
     limitExport: 100,
+    timeOutExport: 200,
     idEsmeraldas: "5f13b0bc-95e7-721e-62de-90b58ce56002"
 }
