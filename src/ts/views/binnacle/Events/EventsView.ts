@@ -562,11 +562,6 @@ export class Events {
                                         "property": "creationDate",
                                         "operator": "<=",
                                         "value": `${_values.end.value}`
-                                    },
-                                    {
-                                      "property": "user.userType",
-                                      "operator": "=",
-                                      "value": `CUSTOMER`
                                     }
                                 ],
                             },
