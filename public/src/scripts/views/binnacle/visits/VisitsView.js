@@ -5,7 +5,7 @@
 //
 import { Config } from "../../../Configs.js";
 import { getEntityData, getFile, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js";
-import { CloseDialog, drawTagsIntoTables, renderRightSidebar, filterDataByHeaderType, inputObserver, verifyUserType, pageNumbers, fillBtnPagination } from "../../../tools.js";
+import { CloseDialog, drawTagsIntoTables, renderRightSidebar, filterDataByHeaderType, inputObserver, verifyUserType, pageNumbers, fillBtnPagination, formatearFechaPorZona } from "../../../tools.js";
 import { UIContentLayout, UIRightSidebar } from "./Layout.js";
 import { UITableSkeletonTemplate } from "./Template.js";
 import { exportVisitCsv, exportVisitPdf, exportVisitXls } from "../../../exportFiles/visits.js";
@@ -148,7 +148,7 @@ export class Visits {
                     <td>${visit.dni}</td>
                     <td>[${visit?.user?.username ?? ''}] ${visit?.user?.firstName ?? ''} ${visit?.user?.lastName ?? ''}</td>
                     <td id="table-date">${visit.creationDate}</td>
-                    <td id="table-time" style="white-space: nowrap">${visit.creationTime}</td>
+                    <td>${formatearFechaPorZona(visit.createdDate)}</td>
                     <td>${verifyUserType(visit.user.userType)}</td>
                     <td class="tag"><span>${visit?.visitState?.name == 'Emergente' ? 'Iniciado' : visit?.visitState?.name}</span></td>
 
@@ -165,6 +165,7 @@ export class Visits {
                 //this.fixCreatedDate()
             }
         };
+        //<td id="table-time" style="white-space: nowrap">${visit.creationTime}</td>
         this.searchVisit = async (tableBody /*, visits: any*/) => {
             const search = document.getElementById('search');
             const btnSearch = document.getElementById('btnSearch');
@@ -235,6 +236,8 @@ export class Visits {
                 const egressGuardName = document.getElementById('egress-guard-name');
                 egressGuardName.value = `${entityData?.egressIssuedId?.firstName ?? ''} ${entityData?.egressIssuedId?.lastName ?? ''}`;
                 //console.log(entityData.citadel.name)
+                const creationDateTime = document.getElementById('creationDateTime');
+                creationDateTime.value = `${entityData?.creationDate ?? ''} ${entityData?.creationTime ?? ''}`;
                 if (entityData?.image !== undefined || entityData?.image3 !== undefined || entityData?.camera1 !== undefined || entityData?.camera2 !== undefined || entityData?.camera3 !== undefined || entityData?.camera4 !== undefined) {
                     let images = [];
                     if (entityData?.image !== undefined) {

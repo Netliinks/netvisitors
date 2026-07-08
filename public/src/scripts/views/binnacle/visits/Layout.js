@@ -37,8 +37,8 @@ export const UIContentLayout = `
             Fecha <i class="fa-regular fa-filter"></i>
             </span></th>
 
-            <th class="thead_centered" width=120><span data-type="time">
-            Hora <i class="fa-regular fa-filter"></i>
+            <th class="thead_centered" width=120><span data-type="creation">
+            Creación (GMT-5) <i class="fa-regular fa-filter"></i>
             </span></th>
 
             <th class="thead_centered" width=150><span data-type="citadel">
@@ -127,6 +127,13 @@ export const UIRightSidebar = `
       id="entity-phone"
       maxlength="10" autocomplete="none">
     <label for="entity-phone">Teléfono</label>
+  </div>
+
+  <br>
+  <br>
+  <div class="material_input">
+    <input type="text" id="creationDateTime" autocomplete="none" class="input_filled" disabled>
+    <label for="creationDateTime"><i class="fa-solid fa-calendar"></i> Fecha Programada (Todo el día)</label>
   </div>
 
   <!-- Start marking -->
