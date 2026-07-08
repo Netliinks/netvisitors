@@ -148,7 +148,7 @@ export class Visits {
                     <td>${visit.dni}</td>
                     <td>[${visit?.user?.username ?? ''}] ${visit?.user?.firstName ?? ''} ${visit?.user?.lastName ?? ''}</td>
                     <td id="table-date">${visit.creationDate}</td>
-                    <td>${formatearFechaPorZona(visit.createdDate)}</td>
+                    <td>${formatearFechaPorZona(visit.createdDate, visit?.creationTime)}</td>
                     <td>${verifyUserType(visit.user.userType)}</td>
                     <td class="tag"><span>${visit?.visitState?.name == 'Emergente' ? 'Iniciado' : visit?.visitState?.name}</span></td>
 
