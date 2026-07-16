@@ -596,11 +596,27 @@ function inferirZonaOrigen(horaTexto, horaReferencia, offsetEsperadoMin = 300, m
         return { esUtc: null, motivo: 'sin_datos_suficientes' };
     }
     const parsearHora = (str) => {
-        const m = String(str).trim().match(/^(\d{1,2}):(\d{2})/);
-        if (!m)
-            return null;
-        return Number(m[1]) * 60 + Number(m[2]);
+        const s = String(str).trim();
+        // Caso esperado: "HH:MM..." puro (creationTime del dispositivo)
+        let m = s.match(/^(\d{1,2}):(\d{2})/);
+        if (m)
+            return Number(m[1]) * 60 + Number(m[2]);
+        // Caso datetime completo: extraemos solo el componente de hora.
+        // Esto SOLO tiene sentido si horaReferencia es un valor legítimo
+        // distinto de fechaTexto (ver chequeo de duplicado más abajo).
+        m = s.match(/[T\s](\d{2}):(\d{2})/);
+        if (m)
+            return Number(m[1]) * 60 + Number(m[2]);
+        return null;
     };
+    // Si horaReferencia es idéntico a horaTexto, NO es una referencia real
+    // comparando dos relojes distintos — es el síntoma de un bug de origen
+    // (típicamente: creationTime vino vacío y algún fallback usó createdDate
+    // dos veces). Tratarlo como "sin referencia válida" en vez de inferir
+    // coincide_local, que daría una falsa confianza de diff=0.
+    if (String(horaTexto).trim() === String(horaReferencia).trim()) {
+        return { esUtc: null, motivo: 'referencia_duplicada_de_fecha' };
+    }
     const minsA = parsearHora(horaTexto);
     const minsR = parsearHora(horaReferencia);
     if (minsA === null || minsR === null) {
@@ -733,3 +749,10 @@ export function formatearFechaPorZona(fechaTexto, horaReferencia = null, opcione
 // => '2024-05-10 15:00:00'   (diff_inesperado_posible_atraso_offline:
 //     sin evidencia confiable de la zona, se asume offset local por defecto,
 //     SIN sufijo -> queda trazado solo vía console.warn con el detalle del diff)
+//
+// formatearFechaPorZona('2023-04-03T22:57:47.793', '2023-04-03T22:57:47.793');
+// => '2023-04-03 17:57:47'   (referencia_duplicada_de_fecha: horaReferencia
+//     es idéntica a fechaTexto -> no es una comparación real, es síntoma de
+//     un bug del caller (creationTime vacío con fallback a createdDate).
+//     Se asume offset local por defecto, sin sufijo, con warning explícito
+//     para que sea fácil de rastrear el origen del problema.)
