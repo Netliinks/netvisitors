@@ -1,4 +1,4 @@
-import { getEntitiesData, getUserInfo, getFilterEntityData, getEntityData, registerEntity, _userAgent } from "./endpoints.js";
+import { getEntitiesData, getUserInfo, getFilterEntityData, getEntityData, registerEntity, updateEntity, _userAgent } from "./endpoints.js";
 //
 export const inputObserver = () => {
     const inputs = document.querySelectorAll('input');
@@ -756,3 +756,48 @@ export function formatearFechaPorZona(fechaTexto, horaReferencia = null, opcione
 //     un bug del caller (creationTime vacío con fallback a createdDate).
 //     Se asume offset local por defecto, sin sufijo, con warning explícito
 //     para que sea fácil de rastrear el origen del problema.)
+export const customerConfig = async (dialogContainer, customerId) => {
+    const customer = await getEntityData('Customer', customerId);
+    dialogContainer.style.display = 'block';
+    dialogContainer.innerHTML = `
+    <div class="dialog_content" id="dialog-content">
+        <div class="dialog">
+            <div class="dialog_container padding_8">
+                <div class="dialog_header">
+                    <h2>Configuración de Empresa</h2>
+                </div>
+
+                <div class="dialog_message padding_8">
+                    <div class="input_checkbox">
+                        <label><input type="checkbox" class="checkbox" id="permitPersonalStatic" ${customer.permitPersonalStatic ? 'checked' : ''}> Permitir Personal Estático</label>
+                    </div>
+                </div>
+
+                <div class="dialog_footer">
+                    <button class="btn btn_primary" id="cancel">Cancelar</button>
+                    <button class="btn btn_danger" id="save-config">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
+    inputObserver();
+    const _closeButton = document.getElementById('cancel');
+    const _saveButton = document.getElementById('save-config');
+    const _dialog = document.getElementById('dialog-content');
+    const _permitPersonalStatic = document.getElementById('permitPersonalStatic');
+    _saveButton.addEventListener('click', async () => {
+        const raw = JSON.stringify({
+            "permitPersonalStatic": _permitPersonalStatic.checked
+        });
+        updateEntity('Customer', customerId, raw).then(() => {
+            setTimeout(() => {
+                alert('Configuración actualizada');
+                new CloseDialog().x(_dialog);
+            }, 1000);
+        });
+    });
+    _closeButton.onclick = () => {
+        new CloseDialog().x(_dialog);
+    };
+};

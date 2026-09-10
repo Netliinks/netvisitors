@@ -1,7 +1,7 @@
 // @filename: Contractors.ts
 
 import { deleteEntity, getEntityData, registerEntity, setPassword, setUserRole, updateEntity, getUserInfo, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js"
-import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyEmail, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalValue, sleep, generateFileSimpleXls } from "../../../tools.js"
+import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyEmail, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalValue, sleep, generateFileSimpleXls, customerConfig } from "../../../tools.js"
 import { InterfaceElement, InterfaceElementCollection } from "../../../types.js"
 import { Config } from "../../../Configs.js"
 import { tableLayout } from "./Layout.js"
@@ -195,6 +195,7 @@ export class Contractors {
         this.register()
         this.import()
         this.export()
+        this.customerConfig()
         this.edit(this.entityDialogContainer, data)
         this.remove()
         this.changeUserPassword()
@@ -1159,6 +1160,13 @@ export class Contractors {
                 _closeButton.onclick = () => {
                     new CloseDialog().x(_dialog);
                 };
+        });
+    };
+
+    public customerConfig = (): void => {
+        const btnConfig: InterfaceElement = document.getElementById('customer-config');
+        btnConfig.addEventListener('click', async () => {
+            customerConfig(this.dialogContainer, customerId);
         });
     };
 
