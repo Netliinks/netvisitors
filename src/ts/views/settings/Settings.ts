@@ -21,6 +21,8 @@ export class Settings {
         }
 
         permitPersonalStatic.addEventListener('change', async () => {
+            const originalState = !permitPersonalStatic.checked;
+            statusMessage.style.opacity = '0';
             const raw = JSON.stringify({
                 "permitPersonalStatic": permitPersonalStatic.checked
             });
