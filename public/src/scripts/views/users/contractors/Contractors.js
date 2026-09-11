@@ -1,6 +1,6 @@
 // @filename: Contractors.ts
 import { deleteEntity, getEntityData, registerEntity, setPassword, setUserRole, updateEntity, getUserInfo, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js";
-import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalValue, sleep, generateFileSimpleXls, customerConfig } from "../../../tools.js";
+import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalValue, sleep, generateFileSimpleXls } from "../../../tools.js";
 import { Config } from "../../../Configs.js";
 import { tableLayout } from "./Layout.js";
 import { tableLayoutTemplate } from "./Templates.js";
@@ -339,12 +339,6 @@ export class Contractors {
                 };
             });
         };
-        this.customerConfig = () => {
-            const btnConfig = document.getElementById('customer-config');
-            btnConfig.addEventListener('click', async () => {
-                customerConfig(this.dialogContainer, customerId);
-            });
-        };
     }
     async render(offset, actualPage, search) {
         infoPage.offset = offset;
@@ -404,7 +398,6 @@ export class Contractors {
         this.register();
         this.import();
         this.export();
-        this.customerConfig();
         this.edit(this.entityDialogContainer, data);
         this.remove();
         this.changeUserPassword();

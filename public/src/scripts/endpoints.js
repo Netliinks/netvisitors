@@ -153,9 +153,11 @@ export const updateEntity = async (entities, entity, raw) => {
         body: raw,
         redirect: 'follow'
     };
-    await fetch(URL, ReqOptions)
-        .then(res => res.json())
-        .catch(err => console.error('Error: ', err));
+    const response = await fetch(URL, ReqOptions);
+    if (!response.ok) {
+        throw new Error('Error updating entity');
+    }
+    return await response.json();
 };
 export const deleteEntity = async (entities, entity) => {
     const URL = `${NetliinksUrl}${entities}/${entity}?fetchPlan=full`;
