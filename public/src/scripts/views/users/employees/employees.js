@@ -11,7 +11,7 @@ import { tableLayoutTemplate } from "./Templates.js";
 const tableRows = Config.tableRows;
 const currentPage = Config.currentPage;
 const customerId = localStorage.getItem('customer_id');
-let isSame = customerId == Config.idEsmeraldas ? true : false;
+//let isSame: boolean = customerId == Config.idEsmeraldas ? true : false;
 let currentUserInfo;
 let infoPage = {
     count: 0,
@@ -487,6 +487,7 @@ export class Employees {
             renderInterface('User');
         });
         const renderInterface = async (entities) => {
+            const isSame = Config.isDepartmentEnabled(currentUserInfo.business, customerId);
             const naDepartment = await searchUniversalValue("name", "=", "N/A", "Department");
             this.entityDialogContainer.innerHTML = '';
             this.entityDialogContainer.style.display = 'flex';
@@ -530,6 +531,13 @@ export class Employees {
                 id="entity-phone"
                 maxlength="10" autocomplete="none">
               <label for="entity-phone">Teléfono</label>
+            </div>
+
+            <div class="material_input">
+              <input type="text"
+                id="entity-vehicularPlate"
+                autocomplete="none">
+              <label for="entity-vehicularPlate">Placa vehicular</label>
             </div>
 
             <div class="material_input">
@@ -645,7 +653,8 @@ export class Employees {
                     //departments: document.getElementById('entity-department'),
                     allowVisits: document.getElementById('allow-visits'),
                     email: document.getElementById('entity-email'),
-                    department: document.getElementById('entity-department')
+                    department: document.getElementById('entity-department'),
+                    vehicularPlate: document.getElementById('entity-vehicularPlate')
                 };
                 const raw = JSON.stringify({
                     "lastName": `${_values.lastName.value}`,
@@ -679,6 +688,7 @@ export class Employees {
                     },
                     "phone": `${_values.phoneNumer.value}`,
                     "dni": `${_values.dni.value}`,
+                    "vehicularPlate": `${_values.vehicularPlate.value}`,
                     "userType": "EMPLOYEE",
                     "username": `${_values.username.value.replace(/\s+/g, '')}@${currentUserInfo.customer.name.toLowerCase().replace(/\s+/g, '')}.com`,
                     "createVisit": `${_values.allowVisits.checked ? true : false}`
@@ -864,6 +874,7 @@ export class Employees {
             });
         });
         const RInterface = async (entities, entityID) => {
+            const isSame = Config.isDepartmentEnabled(currentUserInfo.business, customerId);
             const data = await getEntityData(entities, entityID);
             this.entityDialogContainer.innerHTML = '';
             this.entityDialogContainer.style.display = 'flex';
@@ -916,6 +927,14 @@ export class Employees {
                         maxlength="10"
                         value="${data?.phone ?? ''}">
                     <label for="entity-phone">Teléfono</label>
+                    </div>
+
+                    <div class="material_input">
+                    <input type="text"
+                        id="entity-vehicularPlate"
+                        class="input_filled"
+                        value="${data?.vehicularPlate ?? ''}">
+                    <label for="entity-vehicularPlate">Placa vehicular</label>
                     </div>
 
                     <div class="material_input">
@@ -1048,7 +1067,8 @@ export class Employees {
                     department: document.getElementById('entity-department'),
                     ingressHour: document.getElementById('start-time'),
                     turnChange: document.getElementById('end-time'),
-                    allowVisits: document.getElementById('allow-visits')
+                    allowVisits: document.getElementById('allow-visits'),
+                    vehicularPlate: document.getElementById('entity-vehicularPlate')
                 };
                 let employeeRaw = JSON.stringify({
                     //"lastName": `${_values.lastName.value}`,
@@ -1065,6 +1085,7 @@ export class Employees {
                     "turnChange": `${_values.turnChange.value}`,
                     "phone": `${_values.phone.value}`,
                     "dni": `${_values.dni.value}`,
+                    "vehicularPlate": `${_values.vehicularPlate.value}`,
                     "createVisit": `${_values.allowVisits.checked ? true : false}`
                 });
                 if (_values.dni.value === '' || _values.dni.value === undefined) {

@@ -356,6 +356,13 @@ export class Contractors {
             </div>
 
             <div class="material_input">
+              <input type="text"
+                id="entity-vehicularPlate"
+                autocomplete="none">
+              <label for="entity-vehicularPlate">Placa vehicular</label>
+            </div>
+
+            <div class="material_input">
               <input type="text" id="entity-username" class="input_filled" placeholder="john.doe@ejemplo.com" readonly>
               <label for="entity-username"><i class="input_locked fa-solid fa-lock"></i> Nombre de usuario</label>
             </div>
@@ -459,6 +466,7 @@ export class Contractors {
                     turnChange: document.getElementById('end-time'),
                     //departments: document.getElementById('entity-department'),
                     email: document.getElementById('entity-email'),
+                    vehicularPlate: document.getElementById('entity-vehicularPlate'),
                 }
 
                 const contractorRaw = JSON.stringify({
@@ -493,6 +501,7 @@ export class Contractors {
                     },
                     "phone": `${_values.phoneNumer.value}`,
                     "dni": `${_values.dni.value}`,
+                    "vehicularPlate": `${_values.vehicularPlate.value}`,
                     "userType": "CONTRACTOR",
                     "username": `${_values.username.value.replace(/\s+/g, '')}@${currentUserInfo.customer.name.toLowerCase().replace(/\s+/g, '')}.com`,
                 })
@@ -777,6 +786,14 @@ export class Contractors {
                     </div>
 
                     <div class="material_input">
+                    <input type="text"
+                        id="entity-vehicularPlate"
+                        class="input_filled"
+                        value="${data?.vehicularPlate ?? ''}">
+                    <label for="entity-vehicularPlate">Placa vehicular</label>
+                    </div>
+
+                    <div class="material_input">
                     <input type="text" id="entity-username" class="input_filled" value="${data.username}" readonly>
                     <label for="entity-username">Nombre de usuario</label>
                     </div>
@@ -894,6 +911,7 @@ export class Contractors {
                     ingressHour: document.getElementById('start-time'),
                     turnChange: document.getElementById('end-time'),
                     //contractor: document.getElementById('entity-contractor'),
+                    vehicularPlate: document.getElementById('entity-vehicularPlate'),
                 }
                 let contractorRaw = JSON.stringify({
                     //"lastName": `${_values.lastName.value}`,
@@ -907,6 +925,7 @@ export class Contractors {
                     "turnChange": `${_values.turnChange.value}`,
                     "phone": `${_values.phone.value}`,
                     "dni": `${_values.dni.value}`,
+                    "vehicularPlate": `${_values.vehicularPlate.value}`,
                     /*"contractor": {
                         "id": `${_values.contractor.optionid}`
                     }*/

@@ -6,7 +6,7 @@
 import { _userAgent } from "./endpoints.js";
 export const connect = (mail, password) => {
     const generate = async () => {
-        const URL = 'https://backend.netliinks.com:443/oauth/token';
+        const URL = 'https://backend4.netliinks.com:443/oauth/token';
         const ReqOptions = {
             method: 'POST',
             body: `grant_type=password&username=${mail}&password=${password}`,

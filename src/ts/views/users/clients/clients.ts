@@ -14,7 +14,7 @@ import { exportClientCsv, exportClientPdf, exportClientXls } from "../../../expo
 const tableRows = Config.tableRows
 const currentPage = Config.currentPage
 const customerId = localStorage.getItem('customer_id')
-let isSame: boolean = customerId == Config.idEsmeraldas ? true : false;
+//let isSame: boolean = customerId == Config.idEsmeraldas ? true : false;
 let currentUserInfo : any
 let infoPage = {
     count: 0,
@@ -247,6 +247,7 @@ export class Clients {
         })
 
         const renderInterface = async (entities: string): Promise<void> => {
+            const isSame: boolean = Config.isDepartmentEnabled(currentUserInfo.business, customerId);
             const naDepartment = await searchUniversalValue("name", "=", "N/A", "Department")
             this.entityDialogContainer.innerHTML = ''
             this.entityDialogContainer.style.display = 'flex'
@@ -297,6 +298,13 @@ export class Clients {
                         id="entity-phone"
                         maxlength="10" autocomplete="none">
                     <label for="entity-phone"><i class="fa-solid fa-phone"></i> Teléfono</label>
+                    </div>
+
+                    <div class="material_input">
+                    <input type="text"
+                        id="entity-vehicularPlate"
+                        autocomplete="none">
+                    <label for="entity-vehicularPlate"><i class="fa-solid fa-car"></i> Placa vehicular</label>
                     </div>
 
                     <div class="material_input">
@@ -382,10 +390,11 @@ export class Clients {
                     //customer: document.getElementById('entity-customer'),
                     username: document.getElementById('entity-username'),
                     //citadel: document.getElementById('entity-citadel'),
-                    temporalPass: document.getElementById('tempPass'),
+                     temporalPass: document.getElementById('tempPass'),
                     dni: document.getElementById('entity-dni'),
                     email: document.getElementById('entity-email'),
-                    department: document.getElementById('entity-department')
+                    department: document.getElementById('entity-department'),
+                    vehicularPlate: document.getElementById('entity-vehicularPlate')
                 }
 
                 const raw = JSON.stringify({
@@ -418,6 +427,7 @@ export class Clients {
                         "id": `${inputsCollection.department.dataset.optionid}`
                     },
                     "phone": `${inputsCollection.phoneNumer.value}`,
+                    "vehicularPlate": `${inputsCollection.vehicularPlate.value}`,
                     "userType": "CUSTOMER",
                     "username": `${inputsCollection.username.value.replace(/\s+/g, '')}@${currentUserInfo.customer.name.toLowerCase().replace(/\s+/g, '')}.com`
                 })
@@ -637,6 +647,7 @@ export class Clients {
         })
 
         const RInterface = async (entities: string, entityID: string): Promise<void> => {
+            const isSame: boolean = Config.isDepartmentEnabled(currentUserInfo.business, customerId);
             const data: any = await getEntityData(entities, entityID)
             this.entityDialogContainer.innerHTML = ''
             this.entityDialogContainer.style.display = 'flex'
@@ -675,6 +686,14 @@ export class Clients {
                         maxlength="10"
                         value="${data?.phone ?? ''}">
                     <label for="entity-phone">Teléfono</label>
+                    </div>
+
+                    <div class="material_input">
+                    <input type="text"
+                        id="entity-vehicularPlate"
+                        class="input_filled"
+                        value="${data?.vehicularPlate ?? ''}">
+                    <label for="entity-vehicularPlate">Placa vehicular</label>
                     </div>
 
                     <div class="material_input">
@@ -811,9 +830,11 @@ export class Clients {
                     // @ts-ignore
                     //client: document.getElementById('entity-customer'),
                     // @ts-ignore
-                    department: document.getElementById('entity-department')
+                    department: document.getElementById('entity-department'),
                     // @ts-ignore
                     //customer: document.getElementById('entity-customer')
+                    // @ts-ignore
+                    vehicularPlate: document.getElementById('entity-vehicularPlate')
                 }
                 let raw = JSON.stringify({
                     // @ts-ignore
@@ -838,6 +859,7 @@ export class Clients {
                     "dni": `${$value.dni.value}`,
                     // @ts-ignore
                     //"email": `${$value.email?.value}`,
+                    "vehicularPlate": `${$value.vehicularPlate.value}`,
                 })
                 // @ts-ignore
                 if ($value.dni.value === '' || $value.dni.value === undefined) {

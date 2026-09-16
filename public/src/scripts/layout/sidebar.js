@@ -206,11 +206,6 @@ export class Sidebar {
 
               </div>
             </div>
-            <div class="sidebar_item" id="render-settings">
-              <span class="sidebar_item_label">
-                <i class="fa-regular fa-gear"></i> <div class="label">Configuración</div>
-              </span>
-            </div>
           </div>
         </div>
       </div>

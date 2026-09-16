@@ -15,5 +15,11 @@ export const Config = {
     timeOut: null,
     limitExport: 100,
     timeOutExport: 200,
-    idEsmeraldas: "5f13b0bc-95e7-721e-62de-90b58ce56002"
+    isDepartmentEnabled: function (businessId, customerId) {
+        if (!businessId || !businessId.urlUrb) {
+            return false;
+        }
+        const allowedIds = businessId.urlUrb.split(';');
+        return allowedIds.includes(customerId);
+    }
 };

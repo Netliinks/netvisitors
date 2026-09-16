@@ -1,10 +1,9 @@
 // @filename: endpoints.ts
 // Imports
-import "./config.js";
 import { SignIn } from "./login.js";
 // GENERAL URL
 // ===================================================
-export const NetliinkBase = (window.APP_CONFIG?.baseUrl ?? 'https://backend.netliinks.com:443/');
+export const NetliinkBase = (window.APP_CONFIG?.baseUrl ?? 'https://backend4.netliinks.com:443/');
 const NetliinksUrl = `${NetliinkBase}rest/entities/`;
 // ===================================================
 // TOOLS
@@ -172,7 +171,7 @@ export const deleteEntity = async (entities, entity) => {
 };
 export const registerEntity = async (raw, type) => {
     const req = {
-        url: `${NetliinkBase}rest/entities/`,
+        url: NetliinksUrl,
         method: 'POST'
     };
     const requestOptions = {

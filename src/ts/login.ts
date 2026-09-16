@@ -64,7 +64,7 @@ export class SignIn {
                         this.signOut()
                         alert('Usuario no tiene asignado empresa.')
                         return
-                    }    
+                    }
                 }
                 if (currentUser.isSuper !== true) {
                     this.signOut();
