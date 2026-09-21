@@ -25,6 +25,7 @@ import { currentDateTime } from "../tools.js"
 import { Routines } from "../views/routines/routines/Routines.js"
 import { RoutineRegisters } from "../views/routines/details/Details.js"
 import { Settings } from "../views/settings/Settings.js"
+import { AnnouncementsView } from "../views/announcements/AnnouncementsView.js"
 export class Sidebar {
     private sidebarContainer: InterfaceElement = document.getElementById('app-sidebar')
     public render(): void {
@@ -191,6 +192,16 @@ this.sidebarContainer.innerHTML = `
 
               </div>
             </div>
+            <div class="sidebar_item" id="render-announcements-view">
+              <span class="sidebar_item_label">
+                <i class="fa-regular fa-rectangle-ad"></i> <div class="label">Anuncios</div>
+              </span>
+            </div>
+            <div class="sidebar_item" id="render-settings">
+              <span class="sidebar_item_label">
+                <i class="fa-regular fa-gear"></i> <div class="label">Configuración</div>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -341,6 +352,11 @@ this.sidebarContainer.innerHTML = `
 
               </div>
             </div>
+            <div class="sidebar_item" id="render-announcements-view">
+              <span class="sidebar_item_label">
+                <i class="fa-regular fa-rectangle-ad"></i> <div class="label">Anuncios</div>
+              </span>
+            </div>
             <div class="sidebar_item" id="render-settings">
               <span class="sidebar_item_label">
                 <i class="fa-regular fa-gear"></i> <div class="label">Configuración</div>
@@ -475,6 +491,11 @@ this.sidebarContainer.innerHTML = `
           clearTimeout(Config.timeOut);
           new RoutineRegisters().render(Config.offset, Config.currentPage, "", 0, "Todos");
         });
+        document.getElementById('render-announcements-view')?.addEventListener('click', (): void => {
+            // @ts-ignore
+            clearTimeout(Config.timeOut);
+            new AnnouncementsView().render(Config.offset, Config.currentPage, "")
+        })
         document.getElementById('render-settings')?.addEventListener('click', () => {
           // @ts-ignore
           clearTimeout(Config.timeOut);
