@@ -181,6 +181,31 @@ $TableBorder: 1px solid darken($gray, 10%);
     }
   }
 
+  &_table_scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &.visits-table &_content {
+    table-layout: fixed;
+
+    th:nth-child(1), td:nth-child(1) { width: 21%; }
+    th:nth-child(2), td:nth-child(2) { width: 9%; }
+    th:nth-child(3), td:nth-child(3) { width: 26%; }
+    th:nth-child(4), td:nth-child(4) { width: 9%; }
+    th:nth-child(5), td:nth-child(5) { width: 12%; }
+    th:nth-child(6), td:nth-child(6) { width: 9%; }
+    th:nth-child(7), td:nth-child(7) { width: 8%; }
+    th:nth-child(8), td:nth-child(8) { width: 6%; }
+
+    th, td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
   &_footer {
     display: flex;
     align-items: center;

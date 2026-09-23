@@ -42,7 +42,6 @@ export class Announcements {
             _card.classList.add('card')
             _card.innerHTML = `
                 <button class="btn btn_update_announcement" data-announcementid="${announcement.id}" id="update-announcement"><i class="fa-solid fa-search"></i></button><br>
-                <button class="btn btn_remove_announcement" data-announcementid="${announcement.id}" id="remove-announcement"><i class="fa-solid fa-trash"></i></button>
                 <h3 class="card_title">${announcement.title}</h3>
                 <p class="card_content">${announcement.content}</p>
             `
@@ -84,7 +83,6 @@ export class Announcements {
         })
 
         this.update()
-        this.remove()
     }
 
     private async publish(): Promise<void> {
@@ -187,22 +185,6 @@ export class Announcements {
             }
 
         })
-    }
-
-    private async remove(): Promise<void> {
-        // Remove Announcement
-        const _removeAnnouncementButtons: InterfaceElement = document.querySelectorAll('#remove-announcement')
-        _removeAnnouncementButtons.forEach((button: InterfaceElement) => {
-            button.addEventListener('click', (): void => {
-                let announcementId: string = button.dataset.announcementid
-                deleteEntity('Announcement', announcementId)
-                    .then(res => {
-                        setTimeout((): void => {
-                            this.render()
-                        }, 100)
-                    })
-            })
-        });
     }
 
     private async update(): Promise<void> {

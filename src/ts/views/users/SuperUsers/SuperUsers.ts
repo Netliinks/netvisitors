@@ -190,10 +190,6 @@ export class SuperUsers {
             <button class="button" id="edit-entity" data-entityId="${client.id}">
               <i class="fa-solid fa-pen"></i>
             </button>
-
-            <button class="button" id="remove-entity" data-entityId="${client.id}">
-              <i class="fa-solid fa-trash"></i>
-            </button>
           </dt>
         `
                 table.appendChild(row)
@@ -205,7 +201,6 @@ export class SuperUsers {
         this.import()
         this.export()
         this.edit(this.entityDialogContainer, data)
-        this.remove()
         this.convertToSuper()
         this.changeUserPassword()
     }
@@ -813,64 +808,6 @@ export class SuperUsers {
               });
           };
         };
-    }
-
-    public remove() {
-        const remove: InterfaceElement = document.querySelectorAll('#remove-entity')
-        remove.forEach((remove: InterfaceElement) => {
-
-            const entityId = remove.dataset.entityid
-
-            remove.addEventListener('click', (): void => {
-                this.dialogContainer.style.display = 'block'
-                this.dialogContainer.innerHTML = `
-          <div class="dialog_content" id="dialog-content">
-            <div class="dialog dialog_danger">
-              <div class="dialog_container">
-                <div class="dialog_header">
-                  <h2>¿Deseas eliminar este superusuario?</h2>
-                </div>
-
-                <div class="dialog_message">
-                  <p>Esta acción no se puede revertir</p>
-                </div>
-
-                <div class="dialog_footer">
-                  <button class="btn btn_primary" id="cancel">Cancelar</button>
-                  <button class="btn btn_danger" id="delete">Eliminar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `
-
-                // delete button
-                // cancel button
-                // dialog content
-                const deleteButton: InterfaceElement = document.getElementById('delete')
-                const cancelButton: InterfaceElement = document.getElementById('cancel')
-                const dialogContent: InterfaceElement = document.getElementById('dialog-content')
-
-                deleteButton.onclick = () => {
-                    deleteEntity('User', entityId)
-                    .then((res) => {
-                        setTimeout(async () => {
-                            //let data = await getUsers(SUser);
-                            const tableBody = document.getElementById('datatable-body');
-                            new CloseDialog().x(dialogContent);
-                            new SuperUsers().render(infoPage.offset, infoPage.currentPage, infoPage.search)
-                            //new SuperUsers().load(tableBody, currentPage, data);
-                        }, 1000)
-                    })
-                }
-
-                cancelButton.onclick = () => {
-                    new CloseDialog().x(dialogContent)
-                    //this.render()
-                }
-            })
-        })
-
     }
 
     private export = (): void => {

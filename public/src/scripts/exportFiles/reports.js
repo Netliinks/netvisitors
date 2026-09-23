@@ -1,5 +1,7 @@
+// @ts-nocheck
+import { createModernPdf } from "./modernPdfLayout.js";
 //import {generateFile } from "../tools";
-export const exportReportPdf = (ar, start, end) => {
+const exportReportPdfLegacy = (ar, start, end) => {
     // @ts-ignore
     window.jsPDF = window.jspdf.jsPDF;
     // @ts-ignore
@@ -94,6 +96,49 @@ export const exportReportPdf = (ar, start, end) => {
     var title = "log_Reportes_" + d.getDate() + "_" + (d.getMonth() + 1) + "_" + d.getFullYear() + `.pdf`;
     doc.save(title);
 };
+export const exportReportPdf = (reports, start, end) => {
+    const clean = (value, fallback = '') => String(value ?? '').replace(/\s+/g, ' ').trim() || fallback;
+    const userCounts = reports.reduce((counts, report) => {
+        const user = clean(report?.usuario) || 'Sistema';
+        counts[user] = (counts[user] || 0) + 1;
+        return counts;
+    }, {});
+    createModernPdf({
+        title: 'REPORTES',
+        subtitle: 'Bitácora Digital · Novedades registradas',
+        origin: 'Netvisitors · Reportes',
+        start,
+        end,
+        summary: [
+            { label: 'TOTAL REPORTES', value: reports.length, color: [0, 32, 96] },
+            { label: 'CON ADJUNTO', value: reports.filter((report) => report?.imagen).length, color: [27, 138, 65] },
+            { label: 'SIN ADJUNTO', value: reports.filter((report) => !report?.imagen).length, color: [188, 130, 0] },
+        ],
+        users: Object.entries(userCounts).map(([name, count]) => `${name} (${count})`),
+        columns: [
+            { key: 'number', label: '#', width: 8 },
+            { key: 'date', label: 'FECHA', width: 25 },
+            { key: 'time', label: 'HORA', width: 20 },
+            { key: 'user', label: 'USUARIO', width: 43 },
+            { key: 'title', label: 'TÍTULO', width: 58 },
+            { key: 'content', label: 'CONTENIDO', width: 100 },
+            { key: 'attachment', label: 'ADJUNTO', width: 23 },
+        ],
+        rows: reports.map((report, index) => ({
+            number: index + 1,
+            date: report?.fecha,
+            time: report?.hora,
+            user: clean(report?.usuario),
+            title: clean(report?.titulo),
+            content: clean(report?.contenido),
+            attachment: report?.imagen ? 'VER ANEXO' : 'SIN ADJUNTO',
+            image: report?.imagen,
+            caption: `${clean(report?.titulo, 'Reporte')} · ${report?.fecha ?? ''} ${report?.hora ?? ''}`.trim(),
+        })),
+        evidenceLabel: 'Adjuntos de reportes',
+        filename: `log_Reportes_${new Date().getDate()}_${new Date().getMonth() + 1}_${new Date().getFullYear()}.pdf`,
+    });
+};
 export const exportReportCsv = (ar, start, end) => {
     let rows = [];
     for (let i = 0; i < ar.length; i++) {
@@ -139,6 +184,8 @@ export const exportReportXls = (ar, start, end) => {
     generateFile(rows, "Reportes", "xls");
 };
 const generateFile = (ar, title, extension) => {
+    if (extension === 'xls')
+        return window.downloadXlsx(ar, title);
     //comprobamos compatibilidad
     if (window.Blob && (window.URL || window.webkitURL)) {
         var contenido = "", d = new Date(), blob, reader, save, clicEvent;

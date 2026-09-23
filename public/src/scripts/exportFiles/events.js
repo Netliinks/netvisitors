@@ -1,5 +1,6 @@
+import { createModernPdf } from "./modernPdfLayout.js";
 //import {generateFile } from "../tools";
-export const exportEventPdf = (ar, start, end) => {
+const exportEventPdfLegacy = (ar, start, end) => {
     // @ts-ignore
     window.jsPDF = window.jspdf.jsPDF;
     // @ts-ignore
@@ -98,6 +99,71 @@ export const exportEventPdf = (ar, start, end) => {
     var title = "log_Eventos_" + d.getDate() + "_" + (d.getMonth() + 1) + "_" + d.getFullYear() + `.pdf`;
     doc.save(title);
 };
+const eventCoordinates = (event) => {
+    const latitude = Number(event?.latitude);
+    const longitude = Number(event?.longitude);
+    return event?.latitude !== null && event?.latitude !== undefined
+        && event?.longitude !== null && event?.longitude !== undefined
+        && Number.isFinite(latitude) && Number.isFinite(longitude)
+        ? `${latitude}, ${longitude}`
+        : '';
+};
+export const exportEventPdf = (events, start, end) => {
+    const clean = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
+    const repairEncoding = (value) => {
+        const text = String(value ?? '');
+        if (!/[ÃÂð]/.test(text))
+            return text;
+        try {
+            return decodeURIComponent(escape(text));
+        }
+        catch (_) {
+            return text;
+        }
+    };
+    const eventEmoji = (value) => {
+        const match = repairEncoding(value).match(/^[\p{Extended_Pictographic}\uFE0F\u200D]+/u);
+        return match?.[0] ?? '';
+    };
+    const eventDescription = (value) => clean(repairEncoding(value).replace(/^[\p{Extended_Pictographic}\uFE0F\u200D]+\s*/u, ''));
+    const userCounts = events.reduce((counts, event) => {
+        const user = clean(`${event?.user?.firstName ?? ''} ${event?.user?.lastName ?? ''}`)
+            || event?.user?.username
+            || 'Sistema';
+        counts[user] = (counts[user] || 0) + 1;
+        return counts;
+    }, {});
+    createModernPdf({
+        title: 'REPORTE DE EVENTOS',
+        subtitle: 'Bitácora Digital · Historial de eventos',
+        origin: 'Netvisitors · Alertas y eventos',
+        start,
+        end,
+        summary: [
+            { label: 'TOTAL EVENTOS', value: events.length, color: [0, 32, 96] },
+            { label: 'CON UBICACIÓN GPS', value: events.filter((event) => eventCoordinates(event)).length, color: [27, 138, 65] },
+        ],
+        users: Object.entries(userCounts).map(([name, count]) => `${name} (${count})`),
+        columns: [
+            { key: 'number', label: '#', width: 8 },
+            { key: 'date', label: 'FECHA', width: 26 },
+            { key: 'time', label: 'HORA', width: 20 },
+            { key: 'user', label: 'USUARIO', width: 40 },
+            { key: 'title', label: 'TÍTULO', width: 58 },
+            { key: 'description', label: 'DESCRIPCIÓN', width: 125 },
+        ],
+        rows: events.map((event, index) => ({
+            number: index + 1,
+            date: event?.creationDate,
+            time: event?.creationTime,
+            user: clean(`${event?.user?.firstName ?? ''} ${event?.user?.lastName ?? ''}`) || event?.user?.username,
+            title: clean(event?.title),
+            description: eventDescription(event?.description),
+            emoji: eventEmoji(event?.description),
+        })),
+        filename: `log_Eventos_${new Date().getDate()}_${new Date().getMonth() + 1}_${new Date().getFullYear()}.pdf`,
+    });
+};
 export const exportEventCsv = (ar, start, end) => {
     let rows = [];
     for (let i = 0; i < ar.length; i++) {
@@ -110,6 +176,7 @@ export const exportEventCsv = (ar, start, end) => {
             "Hora": `${event.creationTime}`,
             "Nombre": `${event.user?.firstName ?? ''} ${event.user?.lastName ?? ''}`,
             "Usuario": `${event.user?.username ?? ''}`,
+            "Coordenadas GPS": eventCoordinates(event),
             "Descripción": `${event.description.split("\n").join("(salto)")}`
         };
         rows.push(obj);
@@ -129,6 +196,7 @@ export const exportEventXls = (ar, start, end) => {
             "Hora": `${event.creationTime}`,
             "Nombre": `${event.user?.firstName ?? ''} ${event.user?.lastName ?? ''}`,
             "Usuario": `${event.user?.username ?? ''}`,
+            "Coordenadas GPS": eventCoordinates(event),
             "Descripción": `${event.description.split("\n").join("(salto)")}`
         };
         rows.push(obj);
@@ -137,6 +205,8 @@ export const exportEventXls = (ar, start, end) => {
     generateFile(rows, "Eventos", "xls");
 };
 const generateFile = (ar, title, extension) => {
+    if (extension === 'xls')
+        return window.downloadXlsx(ar, title);
     //comprobamos compatibilidad
     if (window.Blob && (window.URL || window.webkitURL)) {
         var contenido = "", d = new Date(), blob, reader, save, clicEvent;

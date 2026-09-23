@@ -134,6 +134,7 @@ export const exportEmployeeXls = (ar: any) => {
 }
 
 const generateFile = (ar: any, title: string, extension: string) => {
+  if (extension === 'xls') return window.downloadXlsx(ar, title);
     //comprobamos compatibilidad
     if(window.Blob && (window.URL || window.webkitURL)){
         var contenido = "",
