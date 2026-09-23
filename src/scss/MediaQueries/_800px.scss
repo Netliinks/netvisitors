@@ -1,27 +1,5 @@
 @media screen and (max-width: 800px) {
 
-    .visits-table {
-        margin: 0 8px 16px;
-
-        .datatable_header {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .datatable_tools {
-            width: 100%;
-            justify-content: space-between;
-        }
-
-        .datatable_content th:nth-child(2),
-        .datatable_content td:nth-child(2),
-        .datatable_content th:nth-child(4),
-        .datatable_content td:nth-child(4) {
-            display: none;
-        }
-    }
-
     .app {
         grid-template-columns: 1fr !important;
     }

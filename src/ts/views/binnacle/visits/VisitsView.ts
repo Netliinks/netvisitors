@@ -1,4 +1,3 @@
-// @ts-nocheck
 //
 //  VisitsView.ts
 //
@@ -11,7 +10,6 @@ import { InterfaceElement, InterfaceElementCollection } from "../../../types.js"
 import { UIContentLayout, UIRightSidebar } from "./Layout.js"
 import { UITableSkeletonTemplate } from "./Template.js"
 import { exportVisitCsv, exportVisitPdf, exportVisitXls } from "../../../exportFiles/visits.js"
-import { getVisitDisplayName } from "../../../visitDisplayName.js"
 
 // Local configs
 const tableRows = Config.tableRows
@@ -59,11 +57,6 @@ const GetVisits = async (): Promise<void> => {
                       },
                       {
                         "property": "firstName",
-                        "operator": "contains",
-                        "value": `${infoPage.search.toLowerCase()}`
-                      },
-                      {
-                        "property": "legalName",
                         "operator": "contains",
                         "value": `${infoPage.search.toLowerCase()}`
                       },
@@ -166,7 +159,7 @@ export class Visits {
                 let visit = paginatedItems[i] // getting visit items
                 let row: InterfaceElement = document.createElement('TR')
                 row.innerHTML += `
-                    <td style="white-space: nowrap">${getVisitDisplayName(visit)}</td>
+                    <td style="white-space: nowrap">${visit.firstName} ${visit.firstLastName} ${visit.secondLastName}</td>
                     <td>${visit.dni}</td>
                     <td>[${visit?.user?.username ?? ''}] ${visit?.user?.firstName ?? ''} ${visit?.user?.lastName ?? ''}</td>
                     <td id="table-date">${visit.creationDate}</td>
@@ -226,7 +219,7 @@ export class Visits {
             renderRightSidebar(UIRightSidebar)
             const controlImages: InterfaceElement = document.getElementById('galeria')
             const visitName: InterfaceElement = document.getElementById('visit-name')
-            visitName.value = getVisitDisplayName(entityData)
+            visitName.value = `${entityData.firstName} ${entityData.firstLastName}`
 
             const visitReason: InterfaceElement = document.getElementById('visit-reason')
             visitReason.value = entityData?.reason
@@ -241,13 +234,13 @@ export class Visits {
             vehicularPlate.value = entityData?.vehicularPlate ?? ""
 
             const visitCitadel: InterfaceElement = document.getElementById('visit-citadel')
-            visitCitadel.value = entityData?.citadel?.description ?? ''
+            visitCitadel.value = entityData.citadel?.description
 
             const visitCitadelID: InterfaceElement = document.getElementById('visit-citadelid')
-            visitCitadelID.value = entityData?.citadel?.name ?? ''
+            visitCitadelID.value = entityData.citadel?.name
 
             const visitDepartment: InterfaceElement = document.getElementById('visit-department')
-            visitDepartment.value = entityData?.department?.name ?? ''
+            visitDepartment.value = entityData.department?.name
 
             // Start marking
             const ingressDate: InterfaceElement = document.getElementById('ingress-date')

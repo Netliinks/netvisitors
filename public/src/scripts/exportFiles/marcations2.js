@@ -1,5 +1,4 @@
-import { createModernPdf } from "./modernPdfLayout.js";
-const exportMarcationsPdfLegacy = (ar, start) => {
+export const exportMarcationsPdf = (ar, start) => {
     // @ts-ignore
     window.jsPDF = window.jspdf.jsPDF;
     // @ts-ignore
@@ -78,40 +77,6 @@ const exportMarcationsPdfLegacy = (ar, start) => {
     var title = "log_GestMarc_" + d.getDate() + "_" + (d.getMonth() + 1) + "_" + d.getFullYear() + `.pdf`;
     doc.save(title);
 };
-export const exportMarcationsPdf = (marcations, date) => {
-    const clean = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
-    createModernPdf({
-        title: 'REPORTE DE GESTIÓN DE MARCACIONES',
-        subtitle: 'Bitácora Digital · Consolidado de asistencia',
-        origin: 'Netvisitors · Gestión de marcaciones',
-        start: date,
-        end: date,
-        summary: [
-            { label: 'TOTAL USUARIOS', value: marcations.length, color: [0, 32, 96] },
-            { label: 'CON MARCACIÓN FINAL', value: marcations.filter((marcation) => marcation?.egressTime).length, color: [27, 138, 65] },
-            { label: 'PENDIENTES DE SALIDA', value: marcations.filter((marcation) => !marcation?.egressTime).length, color: [188, 130, 0] },
-        ],
-        columns: [
-            { key: 'number', label: '#', width: 10 },
-            { key: 'name', label: 'NOMBRE', width: 62 },
-            { key: 'dni', label: 'DNI', width: 35 },
-            { key: 'date', label: 'FECHA', width: 36 },
-            { key: 'firstMark', label: 'PRIMERA MARCACIÓN', width: 48 },
-            { key: 'lastDate', label: 'FECHA ÚLTIMA MARCACIÓN', width: 46 },
-            { key: 'lastMark', label: 'HORA ÚLTIMA MARCACIÓN', width: 40 },
-        ],
-        rows: marcations.map((marcation, index) => ({
-            number: index + 1,
-            name: clean(`${marcation?.firstName ?? ''} ${marcation?.lastName ?? ''}`),
-            dni: marcation?.dni,
-            date: marcation?.ingressDate,
-            firstMark: marcation?.ingressTime,
-            lastDate: marcation?.egressDate,
-            lastMark: marcation?.egressTime,
-        })),
-        filename: `log_GestMarc_${new Date().getDate()}_${new Date().getMonth() + 1}_${new Date().getFullYear()}.pdf`,
-    });
-};
 export const exportMarcationsCsv = (ar, start, end) => {
     let rows = [];
     for (let i = 0; i < ar.length; i++) {
@@ -153,8 +118,6 @@ export const exportMarcationsXls = (ar, start, end) => {
     generateFile(rows, "GestMarc", "xls");
 };
 const generateFile = (ar, title, extension) => {
-    if (extension === 'xls')
-        return window.downloadXlsx(ar, title);
     //comprobamos compatibilidad
     if (window.Blob && (window.URL || window.webkitURL)) {
         var contenido = "", d = new Date(), blob, reader, save, clicEvent;

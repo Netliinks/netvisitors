@@ -30,6 +30,11 @@ export namespace NUsers {
     edit(container: any, data: any): void
 
     /**
+     * Remove entity
+     */
+    remove(): void
+
+    /**
      * convert entity to super user
      */
     convertToSuper(): void
@@ -59,6 +64,11 @@ export namespace NUsers {
      * Edit entity
      */
     edit(container: any, data: any): void
+
+    /**
+     * Remove entity
+     */
+    remove(): void
   }
 
   export interface IContractors {
@@ -85,5 +95,10 @@ export namespace NUsers {
      * Edit entity
      */
     edit(container: any, data: any): void
+
+    /**
+     * Remove entity
+     */
+    remove(): void
   }
 }

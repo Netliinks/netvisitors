@@ -1,8 +1,5 @@
-// @ts-nocheck
 import { getFile } from "../endpoints.js";
-import { createModernPdf } from "./modernPdfLayout.js";
-
-const exportMarcationsPdfLegacy = async (ar: any, start: any, end: any) => {
+export const exportMarcationsPdf = async (ar: any, start: any, end: any) => {
     // @ts-ignore
     window.jsPDF = window.jspdf.jsPDF;
     // @ts-ignored
@@ -112,62 +109,6 @@ const exportMarcationsPdfLegacy = async (ar: any, start: any, end: any) => {
     doc.save(title);
 };
 
-export const exportMarcationsPdf = async (marcations: any[], start: any, end: any) => {
-    const clean = (value: any) => String(value ?? '').replace(/\s+/g, ' ').trim();
-    const rows = await Promise.all(marcations.map(async (marcation, index) => {
-        const imagePaths = [
-            marcation?.camera1, marcation?.camera2, marcation?.camera3, marcation?.camera4,
-            marcation?.camera5, marcation?.camera6, marcation?.camera7, marcation?.camera8,
-        ].filter(Boolean);
-        const images: string[] = [];
-        for (const path of imagePaths) {
-            try {
-                images.push(await getFile(path));
-            } catch (error) {
-                console.warn('No se pudo cargar una evidencia de marcación para el PDF.', error);
-            }
-        }
-        const name = clean(`${marcation?.user?.firstName ?? ''} ${marcation?.user?.lastName ?? ''}`)
-            || marcation?.user?.username;
-        return {
-            number: index + 1,
-            name,
-            dni: marcation?.user?.dni,
-            entry: `${marcation?.ingressDate ?? ''} ${marcation?.ingressTime ?? ''}`.trim(),
-            exit: `${marcation?.egressDate ?? ''} ${marcation?.egressTime ?? ''}`.trim(),
-            state: marcation?.marcationState?.name,
-            attachment: images.length ? `${images.length} EVIDENCIA${images.length === 1 ? '' : 'S'}` : 'SIN EVIDENCIA',
-            images,
-            caption: `${name || 'Marcación'} · ${marcation?.ingressDate ?? ''} ${marcation?.ingressTime ?? ''}`.trim(),
-        };
-    }));
-
-    createModernPdf({
-        title: 'REPORTE DE MARCACIONES',
-        subtitle: 'Bitácora Digital · Control de asistencia',
-        origin: 'Netvisitors · Marcaciones',
-        start,
-        end,
-        summary: [
-            { label: 'TOTAL MARCACIONES', value: rows.length, color: [0, 32, 96] },
-            { label: 'FINALIZADAS', value: rows.filter((row) => row.state === 'Finalizado').length, color: [27, 138, 65] },
-            { label: 'EN CURSO', value: rows.filter((row) => row.state === 'En curso').length, color: [25, 100, 190] },
-        ],
-        columns: [
-            { key: 'number', label: '#', width: 8 },
-            { key: 'name', label: 'NOMBRE', width: 44 },
-            { key: 'dni', label: 'DNI', width: 28 },
-            { key: 'entry', label: 'INGRESO', width: 45 },
-            { key: 'exit', label: 'SALIDA', width: 45 },
-            { key: 'state', label: 'ESTADO', width: 35 },
-            { key: 'attachment', label: 'EVIDENCIAS', width: 72 },
-        ],
-        rows,
-        evidenceLabel: 'Evidencias de marcación',
-        filename: `log_Marcaciones_${new Date().getDate()}_${new Date().getMonth() + 1}_${new Date().getFullYear()}.pdf`,
-    });
-};
-
 export const exportMarcationsCsv = (ar: any, start: any, end: any) => {
     let rows = [];
     for(let i=0; i < ar.length; i++){
@@ -223,7 +164,6 @@ export const exportMarcationsXls = (ar: any, start: any, end: any) => {
 }
 
 const generateFile = (ar: any, title: string, extension: string) => {
-  if (extension === 'xls') return window.downloadXlsx(ar, title);
     //comprobamos compatibilidad
     if(window.Blob && (window.URL || window.webkitURL)){
         var contenido = "",

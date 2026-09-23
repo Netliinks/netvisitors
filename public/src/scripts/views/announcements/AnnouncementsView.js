@@ -1,5 +1,5 @@
 import { Config } from "../../Configs.js";
-import { registerEntity, getEntityData, setFile, getFile, updateEntity, getFilterEntityData, getFilterEntityCount } from "../../endpoints.js";
+import { deleteEntity, registerEntity, getEntityData, setFile, getFile, updateEntity, getFilterEntityData, getFilterEntityCount } from "../../endpoints.js";
 import { CloseDialog, inputObserver, userInfo, fillBtnPagination, pageNumbers, calculateLine } from "../../tools.js";
 import { UIContentLayout, UIAnnouncementCreator, UIAnnouncementEditor } from "./Layout.js";
 import { UITableSkeletonTemplate } from "./Template.js";
@@ -119,6 +119,7 @@ export class AnnouncementsView {
             }
             this.register();
             this.edit();
+            this.remove();
         };
         this.searchAnnouncements = async (tableBody) => {
             const search = document.getElementById('search');
@@ -278,6 +279,22 @@ export class AnnouncementsView {
                                     this.render(infoPage.offset, infoPage.currentPage, infoPage.search);
                                 }, 1000);
                             });
+                        });
+                    }
+                });
+            });
+        };
+        this.remove = () => {
+            const removeButtons = document.querySelectorAll('#remove-entity');
+            removeButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    let announcementId = button.dataset.entityid;
+                    if (confirm('¿Está seguro de que desea eliminar este anuncio?')) {
+                        deleteEntity('Announcement', announcementId)
+                            .then(res => {
+                            setTimeout(() => {
+                                this.render(infoPage.offset, infoPage.currentPage, infoPage.search);
+                            }, 100);
                         });
                     }
                 });

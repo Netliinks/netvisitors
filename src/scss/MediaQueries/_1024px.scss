@@ -38,13 +38,6 @@
         overflow-x: scroll;
     }
 
-    .visits-table .datatable_content th:nth-child(3),
-    .visits-table .datatable_content td:nth-child(3),
-    .visits-table .datatable_content th:nth-child(6),
-    .visits-table .datatable_content td:nth-child(6) {
-        display: none;
-    }
-
     .dashboard_container {
         margin: 0;
         padding: 16px !important;

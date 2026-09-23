@@ -1,4 +1,3 @@
-// @ts-nocheck
 //
 //  connection.ts
 //
@@ -9,7 +8,8 @@ import { InterfaceElement, TokenGenerator } from "./types.js";
 
 export const connect = (mail: string, password: string): void => {
   const generate = async (): TokenGenerator => {
-    const URL: string = new URL('oauth/token', window.APP_CONFIG.baseUrl).toString()
+    const URL: string =
+      'https://backend4.netliinks.com:443/oauth/token'
     const ReqOptions: {} = {
       method: 'POST',
       body: `grant_type=password&username=${mail}&password=${password}`,

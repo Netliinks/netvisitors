@@ -1,4 +1,3 @@
-// @ts-nocheck
 //
 //  VisitsView.ts
 //
@@ -10,7 +9,6 @@ import { CloseDialog, drawTagsIntoTables, renderRightSidebar, filterDataByHeader
 import { UIContentLayout, UIRightSidebar } from "./Layout.js";
 import { UITableSkeletonTemplate } from "./Template.js";
 import { exportVisitCsv, exportVisitPdf, exportVisitXls } from "../../../exportFiles/visits.js";
-import { getVisitDisplayName } from "../../../visitDisplayName.js";
 // Local configs
 const tableRows = Config.tableRows;
 let currentPage = Config.currentPage;
@@ -55,11 +53,6 @@ const GetVisits = async () => {
                             },
                             {
                                 "property": "firstName",
-                                "operator": "contains",
-                                "value": `${infoPage.search.toLowerCase()}`
-                            },
-                            {
-                                "property": "legalName",
                                 "operator": "contains",
                                 "value": `${infoPage.search.toLowerCase()}`
                             },
@@ -151,7 +144,7 @@ export class Visits {
                     let visit = paginatedItems[i]; // getting visit items
                     let row = document.createElement('TR');
                     row.innerHTML += `
-                    <td style="white-space: nowrap">${getVisitDisplayName(visit)}</td>
+                    <td style="white-space: nowrap">${visit.firstName} ${visit.firstLastName} ${visit.secondLastName}</td>
                     <td>${visit.dni}</td>
                     <td>[${visit?.user?.username ?? ''}] ${visit?.user?.firstName ?? ''} ${visit?.user?.lastName ?? ''}</td>
                     <td id="table-date">${visit.creationDate}</td>
@@ -209,7 +202,7 @@ export class Visits {
                 renderRightSidebar(UIRightSidebar);
                 const controlImages = document.getElementById('galeria');
                 const visitName = document.getElementById('visit-name');
-                visitName.value = getVisitDisplayName(entityData);
+                visitName.value = `${entityData.firstName} ${entityData.firstLastName}`;
                 const visitReason = document.getElementById('visit-reason');
                 visitReason.value = entityData?.reason;
                 const visitAutorizedBy = document.getElementById('visit-authorizedby');
@@ -219,11 +212,11 @@ export class Visits {
                 const vehicularPlate = document.getElementById('vehicular-plate');
                 vehicularPlate.value = entityData?.vehicularPlate ?? "";
                 const visitCitadel = document.getElementById('visit-citadel');
-                visitCitadel.value = entityData?.citadel?.description ?? '';
+                visitCitadel.value = entityData.citadel?.description;
                 const visitCitadelID = document.getElementById('visit-citadelid');
-                visitCitadelID.value = entityData?.citadel?.name ?? '';
+                visitCitadelID.value = entityData.citadel?.name;
                 const visitDepartment = document.getElementById('visit-department');
-                visitDepartment.value = entityData?.department?.name ?? '';
+                visitDepartment.value = entityData.department?.name;
                 // Start marking
                 const ingressDate = document.getElementById('ingress-date');
                 ingressDate.value = entityData?.ingressDate ?? '';

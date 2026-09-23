@@ -188,6 +188,10 @@ export class Clients {
                             <i class="fa-solid fa-pen"></i>
                         </button>
 
+                        <button class="button" id="remove-entity" data-entityId="${client.id}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+
                         <button class="button" id="convert-entity" data-entityId="${client.id}">
                             <i class="fa-solid fa-shield"></i>
                         </button>
@@ -202,6 +206,7 @@ export class Clients {
         this.import()
         this.export()
         this.edit(this.entityDialogContainer, data)
+        this.remove()
         this.convertToSuper()
         this.changeUserPassword()
     }
@@ -753,6 +758,11 @@ export class Clients {
                     <label for="tempPass">Contraseña</label>
                     </div>
                     -->
+                    <div style="display:flex;justify-content:center">
+                        <img alt="Código QR ${data?.dni ?? ''}" id="qrcode">
+                        <br>
+                        <button id="btnDescargar">Descargar</button>
+                    </div>
 
                 </div>
                 <!-- END EDITOR BODY -->
@@ -770,10 +780,31 @@ export class Clients {
             this.selectDepartment()
             //inputSelect('Department', 'entity-department')
             //inputSelect('Business', 'entity-business')
+            const qr: InterfaceElement = document.getElementById("qrcode")
+            // @ts-ignore
+            new QRious({
+                element: qr,
+                value: data.id, // La URL o el texto
+                size: 250,
+                backgroundAlpha: 1, // 0 para fondo transparente
+                foreground: "#1D4C82FF", // Color del QR
+                level: "H", // Puede ser L,M,Q y H (L es el de menor nivel, H el mayor)
+            });
+            download(qr, data)
             this.close()
             UUpdate(entityID)
         }
 
+        const download = (qr: InterfaceElement, data: any) => {
+            const btnDescargar: InterfaceElement =
+                document.getElementById('btnDescargar')
+            btnDescargar.addEventListener('click', () => {
+                const enlace = document.createElement("a");
+                enlace.href = qr.src;
+                enlace.download = `Código QR ${data?.dni ?? ''}.png`;
+                enlace.click();
+            })
+        }
 
         const UUpdate = async (entityId: any): Promise<void> => {
             const updateButton: InterfaceElement =
@@ -934,6 +965,60 @@ export class Clients {
 
                 _closeButton.onclick = () => {
                     new CloseDialog().x(_dialog)
+                }
+            })
+        })
+
+    }
+
+    private remove() {
+        const remove: InterfaceElement = document.querySelectorAll('#remove-entity')
+        remove.forEach((remove: InterfaceElement) => {
+
+            const entityId = remove.dataset.entityid
+            // BOOKMARK: MODAL
+            remove.addEventListener('click', (): void => {
+                this.dialogContainer.style.display = 'block'
+                this.dialogContainer.innerHTML = `
+                    <div class="dialog_content" id="dialog-content">
+                        <div class="dialog dialog_danger">
+                        <div class="dialog_container">
+                            <div class="dialog_header">
+                            <h2>¿Deseas eliminar este cliente?</h2>
+                            </div>
+
+                            <div class="dialog_message">
+                            <p>Esta acción no se puede revertir</p>
+                            </div>
+
+                            <div class="dialog_footer">
+                            <button class="btn btn_primary" id="cancel">Cancelar</button>
+                            <button class="btn btn_danger" id="delete">Eliminar</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>`
+
+                const deleteButton: InterfaceElement = document.getElementById('delete')
+                const cancelButton: InterfaceElement = document.getElementById('cancel')
+                const dialogContent: InterfaceElement = document.getElementById('dialog-content')
+
+                deleteButton.onclick = () => {
+                    deleteEntity('User', entityId)
+                    .then((res) => {
+                        setTimeout(async () => {
+                            //let data = await getUsers();
+                            const tableBody = document.getElementById('datatable-body');
+                            new CloseDialog().x(dialogContent);
+                            new Clients().render(infoPage.offset, infoPage.currentPage, infoPage.search)
+                            //new Clients().load(tableBody, currentPage, data);
+                        }, 1000);
+                    })
+                }
+
+                cancelButton.onclick = () => {
+                    new CloseDialog().x(dialogContent)
+                    //this.render()
                 }
             })
         })
