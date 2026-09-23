@@ -126,7 +126,6 @@ export class AnnouncementsView {
         }
         this.register();
         this.edit();
-        this.remove();
     };
 
     private searchAnnouncements = async (tableBody: InterfaceElement): Promise<void> => {
@@ -297,23 +296,6 @@ export class AnnouncementsView {
                                 }, 1000);
                             });
                     });
-                }
-            });
-        });
-    };
-
-    private remove = (): void => {
-        const removeButtons = document.querySelectorAll('#remove-entity');
-        removeButtons.forEach((button: any) => {
-            button.addEventListener('click', () => {
-                let announcementId = button.dataset.entityid;
-                if (confirm('¿Está seguro de que desea eliminar este anuncio?')) {
-                    deleteEntity('Announcement', announcementId)
-                        .then(res => {
-                            setTimeout(() => {
-                                this.render(infoPage.offset, infoPage.currentPage, infoPage.search);
-                            }, 100);
-                        });
                 }
             });
         });
