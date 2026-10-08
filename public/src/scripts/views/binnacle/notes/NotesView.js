@@ -8,7 +8,7 @@ import { getEntityData, getFile, getFilterEntityData, getFilterEntityCount } fro
 import { CloseDialog, renderRightSidebar, filterDataByHeaderType, inputObserver, pageNumbers, fillBtnPagination, calculateLine } from "../../../tools.js";
 import { UIContentLayout, UIRightSidebar } from "./Layout.js";
 import { UITableSkeletonTemplate } from "./Template.js";
-import { exportReportCsv, exportReportPdf, exportReportXls } from "../../../exportFiles/reports.js";
+import { exportReportCsv, exportReportPdfModern, exportReportXls } from "../../../exportFiles/reports.js";
 // Local configs
 const tableRows = Config.tableRows;
 let currentPage = Config.currentPage;
@@ -438,7 +438,7 @@ export class Notes {
                                                 //}
                                             }
                                             // @ts-ignore
-                                            await exportReportPdf(rows, _values.start.value, _values.end.value);
+                                            await exportReportPdfModern(rows, _values.start.value, _values.end.value);
                                         }
                                         const _dialog = document.getElementById('dialog-content');
                                         new CloseDialog().x(_dialog);

@@ -1,9 +1,10 @@
 // @filename: endpoints.ts
 // Imports
+import "./config.js";
 import { SignIn } from "./login.js";
 // GENERAL URL
 // ===================================================
-export const NetliinkBase = (window.APP_CONFIG?.baseUrl ?? 'https://backend4.netliinks.com:443/');
+export const NetliinkBase = (window.APP_CONFIG?.baseUrl ?? 'https://backend.netliinks.com:443/');
 const NetliinksUrl = `${NetliinkBase}rest/entities/`;
 // ===================================================
 // TOOLS
@@ -152,11 +153,9 @@ export const updateEntity = async (entities, entity, raw) => {
         body: raw,
         redirect: 'follow'
     };
-    const response = await fetch(URL, ReqOptions);
-    if (!response.ok) {
-        throw new Error('Error updating entity');
-    }
-    return await response.json();
+    await fetch(URL, ReqOptions)
+        .then(res => res.json())
+        .catch(err => console.error('Error: ', err));
 };
 export const deleteEntity = async (entities, entity) => {
     const URL = `${NetliinksUrl}${entities}/${entity}?fetchPlan=full`;
@@ -171,7 +170,7 @@ export const deleteEntity = async (entities, entity) => {
 };
 export const registerEntity = async (raw, type) => {
     const req = {
-        url: NetliinksUrl,
+        url: `${NetliinkBase}rest/entities/`,
         method: 'POST'
     };
     const requestOptions = {

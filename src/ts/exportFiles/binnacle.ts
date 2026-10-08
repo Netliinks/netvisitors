@@ -147,7 +147,6 @@ export const exportBinnacleXls = (ar: any, start: any, end: any) => {
   generateFile(rows, "Bitácora", "xls");
 };
 const generateFile = (ar: any, title: any, extension: any) => {
-  if (extension === 'xls') return window.downloadXlsx(ar, title);
   //comprobamos compatibilidad
   if (window.Blob && (window.URL || window.webkitURL)) {
       var contenido = "", d = new Date(), blob, reader, save, clicEvent;

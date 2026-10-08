@@ -126,9 +126,9 @@ export class Departments {
                 let department = paginatedItems[i];
                 let row = document.createElement('tr');
                 row.innerHTML += `
-          <td>${department.name}</td>
+          <td>${department.name}</dt>
           <td class="entity_options">
-          </td>
+          </dt>
         `;
                 table.appendChild(row);
             }

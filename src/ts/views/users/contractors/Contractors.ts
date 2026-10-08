@@ -865,7 +865,6 @@ export class Contractors {
             updatecontractor(entityID)
         }
 
-
         const updatecontractor = async (contractorId: any): Promise<void> => {
             let updateButton: InterfaceElement
             updateButton = document.getElementById('update-changes')

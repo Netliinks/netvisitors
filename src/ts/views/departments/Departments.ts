@@ -116,9 +116,9 @@ export class Departments {
                 let row: InterfaceElement =
                     document.createElement('tr')
                 row.innerHTML += `
-          <td>${department.name}</td>
+          <td>${department.name}</dt>
           <td class="entity_options">
-          </td>
+          </dt>
         `
                 table.appendChild(row)
             }

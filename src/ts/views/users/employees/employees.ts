@@ -15,7 +15,7 @@ import { exportEmployeeCsv, exportEmployeePdf, exportEmployeeXls } from "../../.
 const tableRows = Config.tableRows
 const currentPage = Config.currentPage
 const customerId = localStorage.getItem('customer_id')
-//let isSame: boolean = customerId == Config.idEsmeraldas ? true : false;
+//let isSame: boolean = customerId == Config.idEsmeraldas ? true : customerId == Config.idFloralVC ? true : false;
 let currentUserInfo : any
 let infoPage = {
     count: 0,
@@ -477,7 +477,7 @@ export class Employees implements NUsers.IEmployees {
                     temporalPass: document.getElementById('tempPass'),
                     ingressHour: document.getElementById('start-time'),
                     turnChange: document.getElementById('end-time'),
-                     //departments: document.getElementById('entity-department'),
+                    //departments: document.getElementById('entity-department'),
                     allowVisits: document.getElementById('allow-visits'),
                     email: document.getElementById('entity-email'),
                     department: document.getElementById('entity-department'),
@@ -913,7 +913,6 @@ export class Employees implements NUsers.IEmployees {
             updateEmployee(entityID)
         }
 
-
         const updateEmployee = async (employeeId: any): Promise<void> => {
             let updateButton: InterfaceElement
             updateButton = document.getElementById('update-changes')
@@ -926,7 +925,7 @@ export class Employees implements NUsers.IEmployees {
                     dni: document.getElementById('entity-dni'),
                     status: document.getElementById('entity-state'),
                     department: document.getElementById('entity-department'),
-                     ingressHour: document.getElementById('start-time'),
+                    ingressHour: document.getElementById('start-time'),
                     turnChange: document.getElementById('end-time'),
                     allowVisits: document.getElementById('allow-visits'),
                     vehicularPlate: document.getElementById('entity-vehicularPlate')

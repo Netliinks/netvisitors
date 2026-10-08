@@ -11,7 +11,7 @@ import { tableLayoutTemplate } from "./Templates.js";
 const tableRows = Config.tableRows;
 const currentPage = Config.currentPage;
 const customerId = localStorage.getItem('customer_id');
-//let isSame: boolean = customerId == Config.idEsmeraldas ? true : false;
+//let isSame: boolean = customerId == Config.idEsmeraldas ? true : customerId == Config.idFloralVC ? true : false;
 let currentUserInfo;
 let infoPage = {
     count: 0,

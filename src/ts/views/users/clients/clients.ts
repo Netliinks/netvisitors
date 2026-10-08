@@ -14,7 +14,6 @@ import { exportClientCsv, exportClientPdf, exportClientXls } from "../../../expo
 const tableRows = Config.tableRows
 const currentPage = Config.currentPage
 const customerId = localStorage.getItem('customer_id')
-//let isSame: boolean = customerId == Config.idEsmeraldas ? true : false;
 let currentUserInfo : any
 let infoPage = {
     count: 0,
@@ -385,7 +384,7 @@ export class Clients {
                     //customer: document.getElementById('entity-customer'),
                     username: document.getElementById('entity-username'),
                     //citadel: document.getElementById('entity-citadel'),
-                     temporalPass: document.getElementById('tempPass'),
+                    temporalPass: document.getElementById('tempPass'),
                     dni: document.getElementById('entity-dni'),
                     email: document.getElementById('entity-email'),
                     department: document.getElementById('entity-department'),
@@ -773,7 +772,6 @@ export class Clients {
             this.close()
             UUpdate(entityID)
         }
-
 
         const UUpdate = async (entityId: any): Promise<void> => {
             const updateButton: InterfaceElement =

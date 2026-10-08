@@ -18,7 +18,6 @@ export const UIContentLayout = `
                 <button class="datatable_button import_user" id="export-entities">Exportar</button>
             </div>
         </div>
-
         <div class="datatable_table_scroll">
         <table class="datatable_content">
         <thead><tr>

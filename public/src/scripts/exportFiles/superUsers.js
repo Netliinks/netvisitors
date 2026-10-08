@@ -126,8 +126,6 @@ export const exportSuperXls = (ar) => {
     generateFile(rows, "Superusuarios", "xls");
 };
 const generateFile = (ar, title, extension) => {
-    if (extension === 'xls')
-        return window.downloadXlsx(ar, title);
     //comprobamos compatibilidad
     if (window.Blob && (window.URL || window.webkitURL)) {
         var contenido = "", d = new Date(), blob, reader, save, clicEvent;
@@ -204,4 +202,4 @@ let rows = []
             for(let i=0; i < users.length; i++){
                 let user = users[i]
                 
-            }*/
+            }*/ 
