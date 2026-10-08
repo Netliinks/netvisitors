@@ -21,6 +21,8 @@ import { Sporadic } from "../views/assignment/tasks/sporadic/Sporadic.js";
 import { currentDateTime } from "../tools.js";
 import { Routines } from "../views/routines/routines/Routines.js";
 import { RoutineRegisters } from "../views/routines/details/Details.js";
+import { AnnouncementsView } from "../views/announcements/AnnouncementsView.js";
+import { Settings } from "../views/settings/Settings.js";
 export class Sidebar {
     constructor() {
         this.sidebarContainer = document.getElementById('app-sidebar');
@@ -474,6 +476,16 @@ export class Sidebar {
             // @ts-ignore
             clearTimeout(Config.timeOut);
             new RoutineRegisters().render(Config.offset, Config.currentPage, "", 0, "Todos");
+        });
+        document.getElementById('render-announcements-view')?.addEventListener('click', () => {
+            // @ts-ignore
+            clearTimeout(Config.timeOut);
+            new AnnouncementsView().render(Config.offset, Config.currentPage, "");
+        });
+        document.getElementById('render-settings')?.addEventListener('click', () => {
+            // @ts-ignore
+            clearTimeout(Config.timeOut);
+            new Settings().render();
         });
     }
 }
