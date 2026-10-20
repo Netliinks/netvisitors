@@ -8,6 +8,7 @@ const tableRows = Config.tableRows;
 const currentPage = Config.currentPage;
 const customerId = localStorage.getItem('customer_id');
 let currentUserInfo;
+let currentCustomer;
 let infoPage = {
     count: 0,
     offset: Config.offset,
@@ -15,9 +16,14 @@ let infoPage = {
     search: ""
 };
 let dataPage;
+const currentCustomerData = async () => {
+    const customer = await getEntityData('Customer', `${customerId}`);
+    return customer;
+};
 const getUsers = async () => {
     const currentUser = await getUserInfo();
     currentUserInfo = await getEntityData('User', `${currentUser.attributes.id}`);
+    currentCustomer = await currentCustomerData();
     //const users: any = await getEntitiesData('User')
     //const FSuper: any = users.filter((data: any) => data.isSuper === false)
     //const FCustomer: any = FSuper.filter((data: any) => `${data.customer?.id}` === `${customerId}`)
@@ -521,13 +527,6 @@ export class Contractors {
             </div>
 
             <div class="material_input">
-              <input type="text"
-                id="entity-vehicularPlate"
-                autocomplete="none">
-              <label for="entity-vehicularPlate">Placa vehicular</label>
-            </div>
-
-            <div class="material_input">
               <input type="text" id="entity-username" class="input_filled" placeholder="john.doe@ejemplo.com" readonly>
               <label for="entity-username"><i class="input_locked fa-solid fa-lock"></i> Nombre de usuario</label>
             </div>
@@ -628,7 +627,6 @@ export class Contractors {
                     turnChange: document.getElementById('end-time'),
                     //departments: document.getElementById('entity-department'),
                     email: document.getElementById('entity-email'),
-                    vehicularPlate: document.getElementById('entity-vehicularPlate'),
                 };
                 const contractorRaw = JSON.stringify({
                     "lastName": `${_values.lastName.value}`,
@@ -662,11 +660,10 @@ export class Contractors {
                     },
                     "phone": `${_values.phoneNumer.value}`,
                     "dni": `${_values.dni.value}`,
-                    "vehicularPlate": `${_values.vehicularPlate.value}`,
                     "userType": "CONTRACTOR",
-                    "username": `${_values.username.value.replace(/\s+/g, '')}@${currentUserInfo.customer.name.toLowerCase().replace(/\s+/g, '')}.com`,
+                    "username": `${_values.username.value.replace(/\s+/g, '')}@${currentCustomer.name.toLowerCase().replace(/\s+/g, '')}.com`,
                 });
-                const existUsername = await getVerifyUsername(`${_values.username.value}@${currentUserInfo.customer.name.toLowerCase().replace(/\s+/g, '')}.com`);
+                const existUsername = await getVerifyUsername(`${_values.username.value}@${currentCustomer.name.toLowerCase().replace(/\s+/g, '')}.com`);
                 /*const existEmail = await getVerifyEmail(_values.email.value);
                 if(existEmail == true){
                     alert("¡Correo electrónico ya existe!");
@@ -804,7 +801,7 @@ export class Contractors {
                             "phone": `${contractorData[3]?.replace(/\n/g, '')}`,
                             "dni": `${contractorData[4]?.replace(/\n/g, '')}`,
                             "userType": "CONTRACTOR",
-                            "username": `${contractorData[0]?.toLowerCase().replace(/\n/g, '')}.${contractorData[1]?.toLowerCase().replace(/\n/g, '')}${contractorData[2]?.toLowerCase().replace(/\n/g, '')[0]}@${currentUserInfo.customer.name.toLowerCase().replace(/\s+/g, '')}.com`,
+                            "username": `${contractorData[0]?.toLowerCase().replace(/\n/g, '')}.${contractorData[1]?.toLowerCase().replace(/\n/g, '')}${contractorData[2]?.toLowerCase().replace(/\n/g, '')[0]}@${currentCustomer.name.toLowerCase().replace(/\s+/g, '')}.com`,
                             "createVisit": false,
                         });
                         stageUsers.push(rawFile);
@@ -894,14 +891,6 @@ export class Contractors {
                     </div>
 
                     <div class="material_input">
-                    <input type="text"
-                        id="entity-vehicularPlate"
-                        class="input_filled"
-                        value="${data?.vehicularPlate ?? ''}">
-                    <label for="entity-vehicularPlate">Placa vehicular</label>
-                    </div>
-
-                    <div class="material_input">
                     <input type="text" id="entity-username" class="input_filled" value="${data.username}" readonly>
                     <label for="entity-username">Nombre de usuario</label>
                     </div>
@@ -959,6 +948,11 @@ export class Contractors {
                     <label for="tempPass">Contraseña:</label>
                     </div> -->
                     <br>
+                    <div style="display:flex;justify-content:center">
+                        <img alt="Código QR ${data?.dni ?? ''}" id="qrcode">
+                        <br>
+                        <button id="btnDescargar">Descargar</button>
+                    </div>
 
                 </div>
                 <!-- END EDITOR BODY -->
@@ -974,8 +968,28 @@ export class Contractors {
             inputSelect('State', 'entity-state', data.state.name);
             //inputSelect('Business', 'entity-business')
             //inputSelect('Contractor', 'entity-contractor')
+            const qr = document.getElementById("qrcode");
+            // @ts-ignore
+            new QRious({
+                element: qr,
+                value: data.id, // La URL o el texto
+                size: 250,
+                backgroundAlpha: 1, // 0 para fondo transparente
+                foreground: "#1D4C82FF", // Color del QR
+                level: "H", // Puede ser L,M,Q y H (L es el de menor nivel, H el mayor)
+            });
+            download(qr, data);
             this.close();
             updatecontractor(entityID);
+        };
+        const download = (qr, data) => {
+            const btnDescargar = document.getElementById('btnDescargar');
+            btnDescargar.addEventListener('click', () => {
+                const enlace = document.createElement("a");
+                enlace.href = qr.src;
+                enlace.download = `Código QR ${data?.dni ?? ''}.png`;
+                enlace.click();
+            });
         };
         const updatecontractor = async (contractorId) => {
             let updateButton;
@@ -991,7 +1005,6 @@ export class Contractors {
                     ingressHour: document.getElementById('start-time'),
                     turnChange: document.getElementById('end-time'),
                     //contractor: document.getElementById('entity-contractor'),
-                    vehicularPlate: document.getElementById('entity-vehicularPlate'),
                 };
                 let contractorRaw = JSON.stringify({
                     //"lastName": `${_values.lastName.value}`,
@@ -1005,7 +1018,6 @@ export class Contractors {
                     "turnChange": `${_values.turnChange.value}`,
                     "phone": `${_values.phone.value}`,
                     "dni": `${_values.dni.value}`,
-                    "vehicularPlate": `${_values.vehicularPlate.value}`,
                     /*"contractor": {
                         "id": `${_values.contractor.optionid}`
                     }*/

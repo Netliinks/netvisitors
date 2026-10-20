@@ -82,7 +82,6 @@ export const getUserInfo = async () => {
  *
  * @returns a specific data from url
  */
-// export async function getData(url: RequestInfo): Endpoint
 export const getData = async (url) => {
     let ReqOptions = {
         method: 'GET',
@@ -294,4 +293,36 @@ export const postNotificationPush = async (data) => {
         .then(response => response.text())
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
+};
+export const deleteDepartment = async (id) => {
+    const req = {
+        url: `${NetliinkBase}rest/netguard/departments/${id}`,
+        method: 'DELETE'
+    };
+    const requestOptions = {
+        method: req.method,
+        headers: headers,
+        redirect: 'follow'
+    };
+    const res = await fetch(req.url, requestOptions);
+    if (!res.ok)
+        throw new Error(`HTTP error! status: ${res.status}`);
+    return res;
+};
+export const getGroupActiveMembers = async (search, offset, limit) => {
+    const params = new URLSearchParams();
+    if (search)
+        params.append('search', search);
+    params.append('offset', offset.toString());
+    params.append('limit', limit.toString());
+    const url = `${NetliinkBase}rest/customer-groups/active-members/members?${params.toString()}`;
+    return await getData(url);
+};
+export const getGroupController = async () => {
+    const url = `${NetliinkBase}rest/customer-groups/validate-admin-controller`;
+    return await getData(url);
+};
+export const getGroupControllerActive = async () => {
+    const url = `${NetliinkBase}rest/customer-groups/active-members`;
+    return await getData(url);
 };

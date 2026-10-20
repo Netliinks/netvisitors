@@ -21,8 +21,6 @@ import { Sporadic } from "../views/assignment/tasks/sporadic/Sporadic.js";
 import { currentDateTime } from "../tools.js";
 import { Routines } from "../views/routines/routines/Routines.js";
 import { RoutineRegisters } from "../views/routines/details/Details.js";
-import { AnnouncementsView } from "../views/announcements/AnnouncementsView.js";
-import { Settings } from "../views/settings/Settings.js";
 export class Sidebar {
     constructor() {
         this.sidebarContainer = document.getElementById('app-sidebar');
@@ -207,16 +205,6 @@ export class Sidebar {
 
               </div>
             </div>
-            <div class="sidebar_item" id="render-announcements-view">
-              <span class="sidebar_item_label">
-                <i class="fa-regular fa-rectangle-ad"></i> <div class="label">Anuncios</div>
-              </span>
-            </div>
-            <div class="sidebar_item" id="render-settings">
-              <span class="sidebar_item_label">
-                <i class="fa-regular fa-gear"></i> <div class="label">Configuración</div>
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -368,16 +356,6 @@ export class Sidebar {
 
               </div>
             </div>
-            <div class="sidebar_item" id="render-announcements-view">
-              <span class="sidebar_item_label">
-                <i class="fa-regular fa-rectangle-ad"></i> <div class="label">Anuncios</div>
-              </span>
-            </div>
-            <div class="sidebar_item" id="render-settings">
-              <span class="sidebar_item_label">
-                <i class="fa-regular fa-gear"></i> <div class="label">Configuración</div>
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -476,16 +454,6 @@ export class Sidebar {
             // @ts-ignore
             clearTimeout(Config.timeOut);
             new RoutineRegisters().render(Config.offset, Config.currentPage, "", 0, "Todos");
-        });
-        document.getElementById('render-announcements-view')?.addEventListener('click', () => {
-            // @ts-ignore
-            clearTimeout(Config.timeOut);
-            new AnnouncementsView().render(Config.offset, Config.currentPage, "");
-        });
-        document.getElementById('render-settings')?.addEventListener('click', () => {
-            // @ts-ignore
-            clearTimeout(Config.timeOut);
-            new Settings().render();
         });
     }
 }

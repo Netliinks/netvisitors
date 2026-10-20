@@ -95,7 +95,6 @@ export const getUserInfo = async (): Endpoint => {
  *
  * @returns a specific data from url
  */
-// export async function getData(url: RequestInfo): Endpoint
 export const getData = async (url: RequestInfo): Endpoint => {
     let ReqOptions: {} = {
         method: 'GET',
@@ -206,7 +205,6 @@ export const registerEntity = async (raw: any, type: string): Endpoint => {
         .catch(err => console.error('Error:' + err))
 }
 
-
 export const filterEntities = async (user: any): Endpoint => { }
 
 export const setPassword = async (raw: string): Endpoint => {
@@ -304,6 +302,7 @@ export const setFile = async (file: File): Endpoint => {
         .catch(err => alert(`Error subiendo archivo ${err}`));
     return res
 }
+
 export const postNotificationPush = async(data:any):Endpoint =>{
     let myHeaders: Headers = new Headers();
 
@@ -339,3 +338,38 @@ export const postNotificationPush = async(data:any):Endpoint =>{
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
 }
+
+export const deleteDepartment = async (id: any) => {
+    const req = {
+        url: `${NetliinkBase}rest/netguard/departments/${id}`,
+        method: 'DELETE'
+    };
+    const requestOptions: any = {
+        method: req.method,
+        headers: headers,
+        redirect: 'follow'
+    };
+    const res = await fetch(req.url, requestOptions);
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    return res;
+};
+
+export const getGroupActiveMembers = async (search: string, offset: number, limit: number): Endpoint => {
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    params.append('offset', offset.toString());
+    params.append('limit', limit.toString());
+
+    const url = `${NetliinkBase}rest/customer-groups/active-members/members?${params.toString()}`;
+    return await getData(url);
+};
+
+export const getGroupController = async (): Endpoint => {
+    const url = `${NetliinkBase}rest/customer-groups/validate-admin-controller`;
+    return await getData(url);
+};
+
+export const getGroupControllerActive = async (): Endpoint => {
+    const url = `${NetliinkBase}rest/customer-groups/active-members`;
+    return await getData(url);
+};
