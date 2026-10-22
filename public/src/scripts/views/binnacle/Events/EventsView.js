@@ -55,6 +55,11 @@ const getEvents = async () => {
                     "property": "notificationType.name",
                     "operator": "<>",
                     "value": `Rutina`
+                },
+                {
+                    "property": "notificationType.name",
+                    "operator": "<>",
+                    "value": `Marcacion`
                 }
             ],
         },
@@ -446,6 +451,11 @@ export class Events {
                                             "property": "notificationType.name",
                                             "operator": "<>",
                                             "value": `Rutina`
+                                        },
+                                        {
+                                            "property": "notificationType.name",
+                                            "operator": "<>",
+                                            "value": `Marcacion`
                                         },
                                         {
                                             "property": "creationDate",

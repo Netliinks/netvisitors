@@ -15,7 +15,7 @@ import { exportEmployeeCsv, exportEmployeePdf, exportEmployeeXls } from "../../.
 const tableRows = Config.tableRows
 const currentPage = Config.currentPage
 const customerId = localStorage.getItem('customer_id')
-let isSame: boolean = customerId == Config.idEsmeraldas ? true : customerId == Config.idFloralVC ? true : false;
+//let isSame: boolean = customerId == Config.idEsmeraldas ? true : customerId == Config.idFloralVC ? true : false;
 let currentUserInfo : any
 let currentCustomer : any
 let infoPage = {
@@ -316,6 +316,7 @@ export class Employees implements NUsers.IEmployees {
         })
 
         const renderInterface = async (entities: string): Promise<void> => {
+            const isSame: boolean = Config.isDepartmentEnabled(currentUserInfo.business, customerId);
             const naDepartment = await searchUniversalValue("name", "=", "N/A", "Department")
             this.entityDialogContainer.innerHTML = ''
             this.entityDialogContainer.style.display = 'flex'
@@ -359,6 +360,13 @@ export class Employees implements NUsers.IEmployees {
                 id="entity-phone"
                 maxlength="10" autocomplete="none">
               <label for="entity-phone">Teléfono</label>
+            </div>
+
+            <div class="material_input">
+              <input type="text"
+                id="entity-vehicularPlate"
+                autocomplete="none">
+              <label for="entity-vehicularPlate">Placa vehicular</label>
             </div>
 
             <div class="material_input">
@@ -477,7 +485,8 @@ export class Employees implements NUsers.IEmployees {
                     //departments: document.getElementById('entity-department'),
                     allowVisits: document.getElementById('allow-visits'),
                     email: document.getElementById('entity-email'),
-                    department: document.getElementById('entity-department')
+                    department: document.getElementById('entity-department'),
+                    vehicularPlate: document.getElementById('entity-vehicularPlate')
                 }
 
                 const raw = JSON.stringify({
@@ -512,6 +521,7 @@ export class Employees implements NUsers.IEmployees {
                     },
                     "phone": `${_values.phoneNumer.value}`,
                     "dni": `${_values.dni.value}`,
+                    "vehicularPlate": `${_values.vehicularPlate.value}`,
                     "userType": "EMPLOYEE",
                     "username": `${_values.username.value.replace(/\s+/g, '')}@${currentCustomer.name.toLowerCase().replace(/\s+/g, '')}.com`,
                     "createVisit": `${_values.allowVisits.checked ? true : false}`
@@ -752,6 +762,7 @@ export class Employees implements NUsers.IEmployees {
         })
 
         const RInterface = async (entities: string, entityID: string): Promise<void> => {
+            const isSame: boolean = Config.isDepartmentEnabled(currentUserInfo.business, customerId);
             const data: any = await getEntityData(entities, entityID)
             this.entityDialogContainer.innerHTML = ''
             this.entityDialogContainer.style.display = 'flex'
@@ -804,6 +815,14 @@ export class Employees implements NUsers.IEmployees {
                         maxlength="10"
                         value="${data?.phone ?? ''}">
                     <label for="entity-phone">Teléfono</label>
+                    </div>
+
+                    <div class="material_input">
+                    <input type="text"
+                        id="entity-vehicularPlate"
+                        class="input_filled"
+                        value="${data?.vehicularPlate ?? ''}">
+                    <label for="entity-vehicularPlate">Placa vehicular</label>
                     </div>
 
                     <div class="material_input">
@@ -875,11 +894,6 @@ export class Employees implements NUsers.IEmployees {
                     </div>
                     -->
                     <br>
-                    <div style="display:flex;justify-content:center">
-                        <img alt="Código QR ${data?.dni ?? ''}" id="qrcode">
-                        <br>
-                        <button id="btnDescargar">Descargar</button>
-                    </div>
                 </div>
                 <!-- END EDITOR BODY -->
 
@@ -900,30 +914,8 @@ export class Employees implements NUsers.IEmployees {
             this.selectDepartment()
             //inputSelect('Department', 'entity-department')
             //inputSelect('Business', 'entity-business')
-            const qr: InterfaceElement = document.getElementById("qrcode")
-            // @ts-ignore
-            new QRious({
-                element: qr,
-                value: data.id, // La URL o el texto
-                size: 250,
-                backgroundAlpha: 1, // 0 para fondo transparente
-                foreground: "#1D4C82FF", // Color del QR
-                level: "H", // Puede ser L,M,Q y H (L es el de menor nivel, H el mayor)
-            });
-            download(qr, data)
             this.close()
             updateEmployee(entityID)
-        }
-
-        const download = (qr: InterfaceElement, data: any) => {
-            const btnDescargar: InterfaceElement =
-                document.getElementById('btnDescargar')
-            btnDescargar.addEventListener('click', () => {
-                const enlace = document.createElement("a");
-                enlace.href = qr.src;
-                enlace.download = `Código QR ${data?.dni ?? ''}.png`;
-                enlace.click();
-            })
         }
 
         const updateEmployee = async (employeeId: any): Promise<void> => {
@@ -940,7 +932,8 @@ export class Employees implements NUsers.IEmployees {
                     department: document.getElementById('entity-department'),
                     ingressHour: document.getElementById('start-time'),
                     turnChange: document.getElementById('end-time'),
-                    allowVisits: document.getElementById('allow-visits')
+                    allowVisits: document.getElementById('allow-visits'),
+                    vehicularPlate: document.getElementById('entity-vehicularPlate')
                 }
                 let employeeRaw = JSON.stringify({
                     //"lastName": `${_values.lastName.value}`,
@@ -957,6 +950,7 @@ export class Employees implements NUsers.IEmployees {
                     "turnChange": `${_values.turnChange.value}`,
                     "phone": `${_values.phone.value}`,
                     "dni": `${_values.dni.value}`,
+                    "vehicularPlate": `${_values.vehicularPlate.value}`,
                     "createVisit": `${_values.allowVisits.checked ? true : false}`
                 })
                 if (_values.dni.value === '' || _values.dni.value === undefined) {
@@ -1305,7 +1299,7 @@ export class Employees implements NUsers.IEmployees {
                         sort: "+createdDate",
                         limit: Config.modalRows,
                         offset: offset,
-                        fetchPlan: 'full',
+                        //fetchPlan: 'full',
                         
                     })
                 }
