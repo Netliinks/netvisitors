@@ -556,59 +556,143 @@ export const calculateLine = (text: any, limit: any) => {
 // Función para pausar
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const generateFileSimpleXls = (ar: any, title: any, extension: any) => {
-  //comprobamos compatibilidad
-  if (window.Blob && (window.URL || window.webkitURL)) {
-      var contenido = "", d = new Date(), blob, reader, save, clicEvent;
-      //creamos contenido del archivo
-      for (var i = 0; i < ar.length; i++) {
-          //construimos cabecera del csv
-          if (i == 0)
-              contenido += Object.keys(ar[i]).join(";") + "\n";
-          //resto del contenido
-          contenido += Object.keys(ar[i]).map(function (key) {
-              return ar[i][key];
-          }).join(";") + "\n";
-      }
-      //creamos el blob
-      blob = new Blob(["\ufeff", contenido], { type: `text/${extension}` });
-      //creamos el reader
-      // @ts-ignore
-      var reader = new FileReader();
-      reader.onload = function (event) {
-          //escuchamos su evento load y creamos un enlace en dom
-          save = document.createElement('a');
-          // @ts-ignore
-          save.href = event.target.result;
-          save.target = '_blank';
-          //aquí le damos nombre al archivo
-          save.download = "log_" + title + "_" + d.getDate() + "_" + (d.getMonth() + 1) + "_" + d.getFullYear() + `.${extension}`;
-          try {
-              //creamos un evento click
-              clicEvent = new MouseEvent('click', {
-                  'view': window,
-                  'bubbles': true,
-                  'cancelable': true
-              });
-          }
-          catch (e) {
-              //si llega aquí es que probablemente implemente la forma antigua de crear un enlace
-              clicEvent = document.createEvent("MouseEvent");
-              // @ts-ignore
-              clicEvent.click();
-          }
-          //disparamos el evento
-          save.dispatchEvent(clicEvent);
-          //liberamos el objeto window.URL
-          (window.URL || window.webkitURL).revokeObjectURL(save.href);
-      };
-      //leemos como url
-      reader.readAsDataURL(blob);
-  }
-  else {
-      //el navegador no admite esta opción
-      alert("Su navegador no permite esta acción");
-  }
+export const generateFileSimpleCsv = (ar: any, title: any, extension = 'csv') => {
+    //comprobamos compatibilidad
+    if (window.Blob && (window.URL || window.webkitURL)) {
+        var contenido = "", d = new Date(), blob, reader, save, clicEvent;
+        //creamos contenido del archivo
+        for (var i = 0; i < ar.length; i++) {
+            //construimos cabecera del csv
+            if (i == 0)
+                contenido += Object.keys(ar[i]).join(";") + "\n";
+            //resto del contenido
+            contenido += Object.keys(ar[i]).map(function (key) {
+                return ar[i][key];
+            }).join(";") + "\n";
+        }
+        //creamos el blob
+        blob = new Blob(["\ufeff", contenido], { type: `text/${extension}` });
+        //creamos el reader
+        // @ts-ignore
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            //escuchamos su evento load y creamos un enlace en dom
+            save = document.createElement('a');
+            // @ts-ignore
+            save.href = event.target.result;
+            save.target = '_blank';
+            //aquí le damos nombre al archivo
+            save.download = "Doc_" + title + "_" + d.getDate() + "_" + (d.getMonth() + 1) + "_" + d.getFullYear() + `.${extension}`;
+            try {
+                //creamos un evento click
+                clicEvent = new MouseEvent('click', {
+                    'view': window,
+                    'bubbles': true,
+                    'cancelable': true
+                });
+            }
+            catch (e) {
+                //si llega aquí es que probablemente implemente la forma antigua de crear un enlace
+                clicEvent = document.createEvent("MouseEvent");
+                // @ts-ignore
+                clicEvent.click();
+            }
+            //disparamos el evento
+            save.dispatchEvent(clicEvent);
+            //liberamos el objeto window.URL
+            (window.URL || window.webkitURL).revokeObjectURL(save.href);
+        };
+        //leemos como url
+        reader.readAsDataURL(blob);
+    }
+    else {
+        //el navegador no admite esta opción
+        alert("Su navegador no permite esta acción");
+    }
+};
+
+export const generateFileSimpleXls = async (ar: any, title: any, extension = 'xlsx') => {
+    if (!Array.isArray(ar) || ar.length === 0) {
+        alert("No hay datos para exportar");
+        return;
+    }
+
+    // Si ExcelJS está disponible, lo usamos para asegurar compatibilidad con .xlsx real
+    // @ts-ignore
+    if (typeof ExcelJS !== 'undefined') {
+        // @ts-ignore
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet("Datos");
+
+        const keys = Object.keys(ar[0]);
+        const header = sheet.addRow(keys);
+        header.font = { bold: true };
+        header.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+        // @ts-ignore
+        header.eachCell(cell => {
+            cell.border = { top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" } };
+            cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFD9D9D9" } };
+        });
+
+        ar.forEach(item => {
+            const values = keys.map(key => item[key] !== undefined && item[key] !== null ? item[key] : "");
+            const row = sheet.addRow(values);
+            // @ts-ignore
+            row.eachCell(cell => {
+                cell.border = { top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" } };
+                cell.alignment = { horizontal: "left", vertical: "top", wrapText: true };
+            });
+        });
+
+        sheet.columns = keys.map(key => {
+            const longest = Math.max(key.length, ...ar.map(item => String(item[key] ?? '').split('\n').reduce((max, line) => Math.max(max, line.length), 0)));
+            return { width: Math.min(42, Math.max(14, longest + 2)) };
+        });
+        sheet.views = [{ state: 'frozen', ySplit: 1 }];
+        sheet.autoFilter = { from: 'A1', to: { row: header.number, column: keys.length } };
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' });
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        const d = new Date();
+        // ExcelJS siempre genera un formato moderno (.xlsx), por lo que debemos forzar la extensión a .xlsx para evitar alertas de incompatibilidad en Excel
+        const actualExtension = extension === 'xls' ? 'xlsx' : extension;
+        link.download = "Doc_" + title + "_" + d.getDate() + "_" + (d.getMonth() + 1) + "_" + d.getFullYear() + `.${actualExtension}`;
+        link.click();
+        window.URL.revokeObjectURL(blobUrl);
+    } else {
+        // Fallback robusto usando formato XML/HTML compatible con Excel (.xls / .xlsx) si ExcelJS no está cargado o para soporte de .xls antiguo
+        const d = new Date();
+        const keys = Object.keys(ar[0]);
+
+        let html = `<table><thead><tr>`;
+        keys.forEach(key => {
+            html += `<th style="background-color: #D9D9D9; font-weight: bold; border: 1px solid #000000; text-align: center;">${key}</th>`;
+        });
+        html += `</tr></thead><tbody>`;
+
+        ar.forEach(item => {
+            html += `<tr>`;
+            keys.forEach(key => {
+                const val = item[key] !== undefined && item[key] !== null ? item[key] : "";
+                html += `<td style="border: 1px solid #000000; text-align: center;">${val}</td>`;
+            });
+            html += `</tr>`;
+        });
+        html += `</tbody></table>`;
+
+        const template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Datos</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta charset="UTF-8"></head><body>${html}</body></html>`;
+
+        const blob = new Blob([template], { type: 'application/vnd.ms-excel;charset=utf-8' });
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = "Doc_" + title + "_" + d.getDate() + "_" + (d.getMonth() + 1) + "_" + d.getFullYear() + `.${extension}`;
+        link.click();
+        window.URL.revokeObjectURL(blobUrl);
+    }
 };
 
 /**

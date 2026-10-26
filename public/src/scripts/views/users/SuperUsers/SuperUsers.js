@@ -322,7 +322,7 @@ export class SuperUsers {
                                     await sleep(Config.timeOutExport);
                                 }
                             }
-                            generateFileSimpleXls(users, "Administrador", "csv");
+                            generateFileSimpleXls(users, "Administrador", "xls");
                             const _dialog = document.getElementById('dialog-content');
                             new CloseDialog().x(_dialog);
                             onPressed = false;

@@ -1,4 +1,5 @@
 //import {generateFile } from "../tools";
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools.js";
 import { createModernReportPdf } from "./modernReportPdf.js";
 
 export const exportReportPdf = (ar: any, start: any, end: any) => {
@@ -122,7 +123,7 @@ export const exportReportCsv = (ar: any, start: any, end: any) => {
       //}
       
     }
-    generateFile(rows, "Reportes", "csv");
+    generateFileSimpleCsv(rows, "Reportes", "csv");
 }
 
 export const exportReportXls = (ar: any, start: any, end: any) => {
@@ -147,7 +148,7 @@ export const exportReportXls = (ar: any, start: any, end: any) => {
       //}
       
     }
-    generateFile(rows, "Reportes", "xls");
+    generateFileSimpleXls(rows, "Reportes", "xls");
 }
 
 const generateFile = (ar: any, title: string, extension: string) => {

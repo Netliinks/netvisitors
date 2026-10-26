@@ -1182,7 +1182,7 @@ export class Clients {
                                 }
                             }
                         
-                            generateFileSimpleXls(users,"Cliente","csv");
+                            generateFileSimpleXls(users,"Cliente","xls");
                             const _dialog = document.getElementById('dialog-content');
                             new CloseDialog().x(_dialog);
                             onPressed = false;

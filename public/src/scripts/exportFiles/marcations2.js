@@ -1,3 +1,4 @@
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools";
 export const exportMarcationsPdf = (ar, start) => {
     // @ts-ignore
     window.jsPDF = window.jspdf.jsPDF;
@@ -95,7 +96,7 @@ export const exportMarcationsCsv = (ar, start, end) => {
         rows.push(obj);
         //}
     }
-    generateFile(rows, "GestMarc", "csv");
+    generateFileSimpleCsv(rows, "GestMarc", "csv");
 };
 export const exportMarcationsXls = (ar, start, end) => {
     let rows = [];
@@ -115,7 +116,7 @@ export const exportMarcationsXls = (ar, start, end) => {
         rows.push(obj);
         //}
     }
-    generateFile(rows, "GestMarc", "xls");
+    generateFileSimpleXls(rows, "GestMarc", "xls");
 };
 const generateFile = (ar, title, extension) => {
     //comprobamos compatibilidad

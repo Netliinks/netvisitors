@@ -1,3 +1,4 @@
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools";
 export const exportEmployeePdf = (ar) => {
     let fecha = new Date(); //Fecha actual
     let mes = fecha.getMonth() + 1; //obteniendo mes
@@ -103,7 +104,7 @@ export const exportEmployeeCsv = (ar) => {
         };
         rows.push(obj);
     }
-    generateFile(rows, "Empleados", "csv");
+    generateFileSimpleCsv(rows, "Empleados", "csv");
 };
 export const exportEmployeeXls = (ar) => {
     let rows = [];
@@ -123,7 +124,7 @@ export const exportEmployeeXls = (ar) => {
         };
         rows.push(obj);
     }
-    generateFile(rows, "Empleados", "xls");
+    generateFileSimpleXls(rows, "Empleados", "xls");
 };
 const generateFile = (ar, title, extension) => {
     //comprobamos compatibilidad

@@ -1,3 +1,4 @@
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools.js";
 import { createModernVisitPdf } from "./modernVisitPdf.js";
 
 export const exportVisitPdf = (ar: any, start: any, end: any) => {
@@ -423,7 +424,7 @@ export const exportVisitCsv = (ar: any, start: any, end: any) => {
         }
         rows.push(obj);
     }
-    generateFile(rows, "Visitas", "csv");
+    generateFileSimpleCsv(rows, "Visitas", "csv");
 }
 
 export const exportVisitXls = (ar: any, start: any, end: any) => {
@@ -456,7 +457,7 @@ export const exportVisitXls = (ar: any, start: any, end: any) => {
         }
         rows.push(obj);
     }
-    generateFile(rows, "Visitas", "xls");
+    generateFileSimpleXls(rows, "Visitas", "xls");
 }
 
 const generateFile = (ar: any, title: string, extension: string) => {

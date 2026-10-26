@@ -1,3 +1,5 @@
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools";
+
 //import {generateFile } from "../tools";
 export const exportVehicularPdf = (ar: any, start: any, end: any) => {
     // @ts-ignore
@@ -117,7 +119,7 @@ export const exportVehicularCsv = (ar: any, start: any, end: any) => {
               rows.push(obj);
         //}
     }
-    generateFile(rows, "Vehicular", "csv");
+    generateFileSimpleCsv(rows, "Vehicular", "csv");
 };
 export const exportVehicularXls = (ar: any, start: any, end: any) => {
     let rows = [];
@@ -149,7 +151,7 @@ export const exportVehicularXls = (ar: any, start: any, end: any) => {
             rows.push(obj);
         //}
     }
-    generateFile(rows, "Vehicular", "xls");
+    generateFileSimpleXls(rows, "Vehicular", "xls");
 };
 const generateFile = (ar: any, title: any, extension: any) => {
     //comprobamos compatibilidad

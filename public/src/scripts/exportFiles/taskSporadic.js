@@ -1,3 +1,4 @@
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools";
 export const exportSporadicPdf = (ar, start, end) => {
     // @ts-ignore
     window.jsPDF = window.jspdf.jsPDF;
@@ -90,7 +91,7 @@ export const exportSporadicCsv = (ar, start, end) => {
         rows.push(obj);
         //}
     }
-    generateFile(rows, "Eventuales", "csv");
+    generateFileSimpleCsv(rows, "Eventuales", "csv");
 };
 export const exportSporadicXls = (ar, start, end) => {
     let rows = [];
@@ -108,7 +109,7 @@ export const exportSporadicXls = (ar, start, end) => {
         rows.push(obj);
         //}
     }
-    generateFile(rows, "Eventuales", "xls");
+    generateFileSimpleXls(rows, "Eventuales", "xls");
 };
 const generateFile = (ar, title, extension) => {
     //comprobamos compatibilidad

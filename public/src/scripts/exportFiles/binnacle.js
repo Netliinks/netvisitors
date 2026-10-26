@@ -1,3 +1,4 @@
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools";
 //import {generateFile } from "../tools";
 export const exportBinnaclePdf = (ar, start, end) => {
     // @ts-ignore
@@ -124,7 +125,7 @@ export const exportBinnacleCsv = (ar, start, end) => {
         rows.push(obj);
         //}
     }
-    generateFile(rows, "Bitácora", "csv");
+    generateFileSimpleCsv(rows, "Bitácora", "csv");
 };
 export const exportBinnacleXls = (ar, start, end) => {
     let rows = [];
@@ -143,7 +144,7 @@ export const exportBinnacleXls = (ar, start, end) => {
         rows.push(obj);
         //}
     }
-    generateFile(rows, "Bitácora", "xls");
+    generateFileSimpleXls(rows, "Bitácora", "xls");
 };
 const generateFile = (ar, title, extension) => {
     //comprobamos compatibilidad
