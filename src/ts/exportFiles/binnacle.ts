@@ -1,4 +1,4 @@
-import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools";
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools.js";
 
 //import {generateFile } from "../tools";
 export const exportBinnaclePdf = (ar: any, start: any, end: any) => {

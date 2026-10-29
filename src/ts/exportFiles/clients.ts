@@ -1,4 +1,4 @@
-import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools";
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools.js";
 
 export const exportClientPdf = (ar: any) => {
     let fecha = new Date(); //Fecha actual

@@ -1,4 +1,4 @@
-import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools";
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools.js";
 
 export const exportMarcationsPdf = (ar: any, start: any) => {
     // @ts-ignore

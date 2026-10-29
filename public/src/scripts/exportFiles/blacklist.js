@@ -1,4 +1,4 @@
-import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools";
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools.js";
 export const exportBlackListPdf = (ar) => {
     let fecha = new Date(); //Fecha actual
     let mes = fecha.getMonth() + 1; //obteniendo mes

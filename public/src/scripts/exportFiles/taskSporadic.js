@@ -1,4 +1,4 @@
-import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools";
+import { generateFileSimpleCsv, generateFileSimpleXls } from "../tools.js";
 export const exportSporadicPdf = (ar, start, end) => {
     // @ts-ignore
     window.jsPDF = window.jspdf.jsPDF;
