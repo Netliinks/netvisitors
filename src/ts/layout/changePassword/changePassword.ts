@@ -73,6 +73,9 @@ export class ChangePassword {
             if (_password.value === '') {
                 alert('El campo "Contraseña" no puede estar vacío.')
             }
+            else if (_password.value.length < Config.minLengthPassword) {
+                alert(`¡La clave debe tener al menos ${Config.minLengthPassword} caracteres!`)
+            }
             else if (_repassword.value === ' ') {
                 alert('Debe repetir la contraseña para continuar')
             }
@@ -89,6 +92,9 @@ export class ChangePassword {
                             //new CloseDialog().x(_dialog)
                             window.location.reload()
                         }, 1000)
+                    })
+                    .catch((err) => {
+                        alert('No se pudo cambiar la contraseña: ' + (err.message || err))
                     })
             }
             else {

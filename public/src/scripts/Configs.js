@@ -22,5 +22,6 @@ export const Config = {
         }
         const allowedIds = businessId.urlUrb.split(';');
         return allowedIds.includes(customerId);
-    }
+    },
+    minLengthPassword: 4,
 };

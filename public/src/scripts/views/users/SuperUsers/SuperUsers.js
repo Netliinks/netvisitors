@@ -1,5 +1,5 @@
 // @filename: SuperUsers.ts
-import { getEntityData, registerEntity, setPassword, setUserRole, updateEntity, getUserInfo, sendMail, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js";
+import { getEntityData, registerEntity, setPassword, updateEntity, getUserInfo, sendMail, getFilterEntityData, getFilterEntityCount } from "../../../endpoints.js";
 import { drawTagsIntoTables, inputObserver, inputSelect, CloseDialog, getVerifyEmail, filterDataByHeaderType, getVerifyUsername, pageNumbers, fillBtnPagination, searchUniversalValue, sleep, generateFileSimpleXls } from "../../../tools.js";
 import { Config } from "../../../Configs.js";
 import { tableLayout, UIConvertToSU } from "./Layout.js";
@@ -351,8 +351,6 @@ export class SuperUsers {
         this.pagination(data, tableRows, infoPage.currentPage);
     }
     load(table, currentPage, data) {
-        setUserPassword(SUser);
-        //setRole(SUser);
         table.innerHTML = '';
         currentPage--;
         let start = tableRows * currentPage;
@@ -443,6 +441,9 @@ export class SuperUsers {
                     if (_password.value === '') {
                         alert('El campo "Contraseña" no puede estar vacío.');
                     }
+                    else if (_password.value.length < Config.minLengthPassword) {
+                        alert(`¡La clave debe tener al menos ${Config.minLengthPassword} caracteres!`);
+                    }
                     else if (_repassword.value === ' ') {
                         alert('Debe repetir la contraseña para continuar');
                     }
@@ -457,6 +458,8 @@ export class SuperUsers {
                                 alert('Se ha cambiado la contraseña');
                                 new CloseDialog().x(_dialog);
                             }, 1000);
+                        }).catch((err) => {
+                            alert('No se pudo cambiar la contraseña: ' + (err.message || err));
                         });
                     }
                     else {
@@ -672,7 +675,10 @@ export class SuperUsers {
                     alert("DNI vacío!");
                 }
                 else if (inputsCollection.temporalPass.value === '' || inputsCollection.temporalPass.value === undefined) {
-                    alert("Clave vacío!");
+                    alert("¡Clave vacía!");
+                }
+                else if (inputsCollection.temporalPass.value.length < Config.minLengthPassword) {
+                    alert(`¡La clave debe tener al menos ${Config.minLengthPassword} caracteres!`);
                 }
                 else {
                     reg(raw, mailRaw);
@@ -691,6 +697,8 @@ export class SuperUsers {
                     new SuperUsers().render(Config.offset, Config.currentPage, infoPage.search);
                     //new SuperUsers().load(tableBody, currentPage, data)
                 }, 1000);
+            }).catch(err => {
+                alert('No se pudo crear el superusuario: ' + (err.message || err));
             });
         };
     }
@@ -1088,111 +1096,3 @@ export class SuperUsers {
     })
 
 }*/
-export const setUserPassword = async (SUser) => {
-    /*const users = await getEntitiesData('User');
-    const filterBySuperUsers = users.filter((data: any) => data.isSuper === SUser);
-    const FCustomer: any = filterBySuperUsers.filter((data: any) => `${data.customer?.id}` === `${customerId}`)
-    const filterByUserType: any = FCustomer.filter((data: any) => `${data.userType}`.includes('CUSTOMER'))
-    const data = filterByUserType;*/
-    let raw = JSON.stringify({
-        "filter": {
-            "conditions": [
-                {
-                    "property": "isSuper",
-                    "operator": "=",
-                    "value": `${true}`
-                },
-                {
-                    "property": "customer.id",
-                    "operator": "=",
-                    "value": `${customerId}`
-                },
-                {
-                    "property": "userType",
-                    "operator": "=",
-                    "value": `CUSTOMER`
-                },
-                {
-                    "property": "newUser",
-                    "operator": "=",
-                    "value": `${true}`
-                },
-                {
-                    "property": "temp",
-                    "operator": "<>",
-                    "value": ``
-                }
-            ]
-        }
-    });
-    let data = await getFilterEntityData("User", raw);
-    data.forEach((newUser) => {
-        let raw = JSON.stringify({
-            "id": `${newUser.id}`,
-            "newPassword": `${newUser.temp}`
-        });
-        if (newUser.newUser === true && (newUser.temp !== undefined || newUser.temp !== ''))
-            setPassword(raw);
-    });
-    setRole(data);
-};
-export async function setRole(data) {
-    /*const users = await getEntitiesData('User');
-    const filterByNewUsers = users.filter((data: any) => data.newUser === SUser);
-    const FCustomer: any = filterByNewUsers.filter((data: any) => `${data.customer?.id}` === `${customerId}`)
-    const filterByUserType: any = FCustomer.filter((data: any) => `${data.userType}`.includes('CUSTOMER'))
-    const data = filterByUserType;*/
-    /*let raw = JSON.stringify({
-        "filter": {
-            "conditions": [
-              {
-                "property": "isSuper",
-                "operator": "=",
-                "value": `${SUser}`
-              },
-              {
-                "property": "newUser",
-                "operator": "=",
-                "value": `${SUser}`
-              },
-              {
-                "property": "customer.id",
-                "operator": "=",
-                "value": `${customerId}`
-              },
-              {
-                "property": "userType",
-                "operator": "=",
-                "value": `CUSTOMER`
-              },
-              {
-                "property": "temp",
-                "operator": "<>",
-                "value": ``
-              }
-            ]
-        }
-    })
-    let data = await getFilterEntityData("User", raw)*/
-    data.forEach((newUser) => {
-        let roleCode;
-        if (newUser.userType === 'CUSTOMER') {
-            roleCode = 'app_web_clientes';
-        }
-        let raw = JSON.stringify({
-            "id": `${newUser.id}`,
-            "roleCode": `${roleCode}`
-        });
-        let updateNewUser = JSON.stringify({
-            "newUser": false,
-            "temp": ''
-        });
-        if (newUser.newUser === true) {
-            setUserRole(raw).then((res) => {
-                setTimeout(() => {
-                    updateEntity('User', newUser.id, updateNewUser);
-                }, 1000);
-            });
-        }
-    });
-}
