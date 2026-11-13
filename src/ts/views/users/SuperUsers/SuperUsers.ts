@@ -450,18 +450,18 @@ export class SuperUsers {
                 }
                 const randomKey = { key: Math.floor(Math.random() * 999999) };
                 const raw = JSON.stringify({
-                    "lastName": `${inputsCollection.lastName.value}`,
-                    "secondLastName": `${inputsCollection.secondLastName.value}`,
+                    "lastName": `${inputsCollection.lastName.value.trim()}`,
+                    "secondLastName": `${inputsCollection.secondLastName.value.trim()}`,
                     "isSuper": true,
                     "newUser": true,
                     "hashSuper": randomKey.key,
                     "verifiedSuper": false,
-                    "dni": `${inputsCollection.dni.value}`,
-                    "email": `${inputsCollection.email.value}`,
-                    "temp": `${inputsCollection.temporalPass.value}`,
+                    "dni": `${inputsCollection.dni.value.trim()}`,
+                    "email": `${inputsCollection.email.value.trim()}`,
+                    "temp": `${inputsCollection.temporalPass.value.trim()}`,
                     "isWebUser": false,
                     "active": true,
-                    "firstName": `${inputsCollection.firstName.value}`,
+                    "firstName": `${inputsCollection.firstName.value.trim()}`,
                     "state": {
                         "id": `${inputsCollection.state.dataset.optionid}`
                     },
@@ -480,35 +480,35 @@ export class SuperUsers {
                     "department":{
                       "id": `${naDepartment[0]?.id ?? ''}`
                     },
-                    "phone": `${inputsCollection.phoneNumer.value}`,
+                    "phone": `${inputsCollection.phoneNumer.value.trim()}`,
                     "userType": "CUSTOMER",
                     "username": `${inputsCollection.username.value.replace(/\s+/g, '')}@${currentUserInfo.customer.name.toLowerCase().replace(/\s+/g, '')}.com`
                 })
                 let mailRaw = JSON.stringify({
-                    "address": inputsCollection.email.value,
+                    "address": inputsCollection.email.value.trim(),
                     "subject": "Netliinks - Clave de validación.",
-                    "body": `Estimado ${inputsCollection.firstName.value}, el código de confirmación para ingresar a la plataforma de Netvisitors es: \n
+                    "body": `Estimado ${inputsCollection.firstName.value.trim()}, el código de confirmación para ingresar a la plataforma de Netvisitors es: \n
                                                                ${randomKey.key}\nNo responder a este correo.\nSaludos.\n\n\nNetliinks S.A.`
                 })
-                const existEmail = await getVerifyEmail(inputsCollection.email.value)
+                const existEmail = await getVerifyEmail(inputsCollection.email.value.trim())
                 const existUsername = await getVerifyUsername(`${inputsCollection.username.value}@${currentUserInfo.customer.name.toLowerCase().replace(/\s+/g, '')}.com`)
                 if(existUsername != "none"){
                     alert("¡Usuario ya existe, es tipo "+existUsername+"!")
                 }else if(existEmail == true){
                     alert("¡Correo electrónico ya existe!")
-                }else if(inputsCollection.firstName.value === '' || inputsCollection.firstName.value === undefined){
+                }else if(inputsCollection.firstName.value.trim() === '' || inputsCollection.firstName.value === undefined){
                     alert("¡Nombre vacío!")
-                }else if(inputsCollection.lastName.value === '' || inputsCollection.lastName.value === undefined){
+                }else if(inputsCollection.lastName.value.trim() === '' || inputsCollection.lastName.value === undefined){
                     alert("¡Primer apellido vacío!")
-                }else if(inputsCollection.secondLastName.value === '' || inputsCollection.secondLastName.value === undefined){
+                }else if(inputsCollection.secondLastName.value.trim() === '' || inputsCollection.secondLastName.value === undefined){
                     alert("¡Segundo apellido vacío!")
-                }else if(inputsCollection.email.value === '' || inputsCollection.email.value === undefined){
+                }else if(inputsCollection.email.value.trim() === '' || inputsCollection.email.value === undefined){
                     alert("¡Correo vacío!")
-                }else if(inputsCollection.dni.value === '' || inputsCollection.dni.value === undefined){
+                }else if(inputsCollection.dni.value.trim() === '' || inputsCollection.dni.value === undefined){
                     alert("DNI vacío!")
-                }else if(inputsCollection.temporalPass.value === '' || inputsCollection.temporalPass.value === undefined){
+                }else if(inputsCollection.temporalPass.value.trim() === '' || inputsCollection.temporalPass.value === undefined){
                     alert("¡Clave vacía!")
-                }else if (inputsCollection.temporalPass.value.length < Config.minLengthPassword) {
+                }else if (inputsCollection.temporalPass.value.trim().length < Config.minLengthPassword) {
                     alert(`¡La clave debe tener al menos ${Config.minLengthPassword} caracteres!`)
                 }else{
                     reg(raw, mailRaw)
@@ -609,17 +609,17 @@ export class SuperUsers {
           <!-- EDITOR BODY -->
           <div class="entity_editor_body">
             <div class="material_input">
-              <input type="text" id="entity-firstname" class="input_filled" value="${data.firstName}" readonly>
+              <input type="text" id="entity-firstname" class="input_filled" value="${data.firstName}">
               <label for="entity-firstname">Nombre</label>
             </div>
 
             <div class="material_input">
-              <input type="text" id="entity-lastname" class="input_filled" value="${data.lastName}" readonly>
+              <input type="text" id="entity-lastname" class="input_filled" value="${data.lastName}">
               <label for="entity-lastname">Apellido</label>
             </div>
 
             <div class="material_input">
-              <input type="text" id="entity-secondlastname" class="input_filled" value="${data.secondLastName}" readonly>
+              <input type="text" id="entity-secondlastname" class="input_filled" value="${data.secondLastName}">
               <label for="entity-secondlastname">2do Apellido</label>
             </div>
 
@@ -628,7 +628,7 @@ export class SuperUsers {
                 id="entity-phone"
                 class="input_filled"
                 maxlength="10"
-                value="${data.phone}">
+                value="${data?.phone ?? ''}">
               <label for="entity-phone">Teléfono</label>
             </div>
 
@@ -638,12 +638,12 @@ export class SuperUsers {
             </div>
 
             <div class="material_input">
-              <input type="text" maxlength="10" id="entity-dni" class="input_filled" value="${data.dni}">
+              <input type="text" maxlength="10" id="entity-dni" class="input_filled" value="${data?.dni ?? ''}">
               <label for="entity-dni">Cédula</label>
             </div>
 
             <div class="material_input">
-              <input type="email" id="entity-email" class="input_filled" value="${data.email}" disabled>
+              <input type="email" id="entity-email" class="input_filled" value="${data?.email ?? ''}" disabled>
               <label for="entity-email">Email</label>
             </div>
 
@@ -739,13 +739,13 @@ export class SuperUsers {
         const UUpdate = async (entityId: any) => {
             const updateButton: InterfaceElement = document.getElementById('update-changes');
             updateButton.addEventListener('click', async() => {
-                const $value = {
+                const $value: any = {
                     // @ts-ignore
-                    //firstName: document.getElementById('entity-firstname'),
+                    firstName: document.getElementById('entity-firstname'),
                     // @ts-ignore
-                    //lastName: document.getElementById('entity-lastname'),
+                    lastName: document.getElementById('entity-lastname'),
                     // @ts-ignore
-                    //secondLastName: document.getElementById('entity-secondlastname'),
+                    secondLastName: document.getElementById('entity-secondlastname'),
                     // @ts-ignore
                     phone: document.getElementById('entity-phone'),
                     // @ts-ignore
@@ -767,12 +767,12 @@ export class SuperUsers {
                 };
               let raw = JSON.stringify({
                   // @ts-ignore
-                  //"lastName": `${$value.lastName?.value}`,
+                  "firstName": `${$value.firstName?.value.trim()}`,
                   // @ts-ignore
-                  //"secondLastName": `${$value.secondLastName?.value}`,
+                  "lastName": `${$value.lastName?.value.trim()}`,
+                  // @ts-ignore
+                  "secondLastName": `${$value.secondLastName?.value.trim()}`,
                   "active": true,
-                  // @ts-ignore
-                  //"firstName": `${$value.firstName?.value}`,
                   "state": {
                       "id": `${$value.status?.dataset.optionid}`
                   },
@@ -780,9 +780,9 @@ export class SuperUsers {
                   //    "id": `${$value.customer?.dataset.optionid}`
                   //},
                   // @ts-ignore
-                  "phone": `${$value.phone?.value}`,
+                  "phone": `${$value.phone?.value.trim()}`,
                   // @ts-ignore
-                  "dni": `${$value.dni.value}`,
+                  "dni": `${$value.dni?.value.trim()}`,
                   // @ts-ignore
                   //"email": `${$value.email?.value}`,
                   // @ts-ignore
@@ -795,10 +795,16 @@ export class SuperUsers {
                   update(raw);
               } */
               // @ts-ignore
-              if ($value.dni.value === '' || $value.dni.value === undefined) {
+              if ($value.firstName?.value.trim() === '' || $value.firstName?.value === undefined) {
+                alert("¡Nombre vacío!");
+              }else if ($value.lastName?.value.trim() === '' || $value.lastName?.value === undefined) {
+                alert("¡Primer apellido vacío!");
+              }else if ($value.secondLastName?.value.trim() === '' || $value.secondLastName?.value === undefined) {
+                alert("¡Segundo apellido vacío!");
+              }else if ($value.dni?.value.trim() === '' || $value.dni?.value === undefined) {
                 alert("DNI vacío!");
               }else{
-                update(raw);
+                  update(raw);
               }
             });
             const update = (raw: any) => {

@@ -62,6 +62,11 @@ export class SignIn {
                     alert('Usuario no es superusuario.');
                     return;
                 }
+                if (currentUser.isWebUser !== false) {
+                    this.signOut();
+                    alert('Usuario no es usuario web.');
+                    return;
+                }
                 if (currentUser.userType !== 'CUSTOMER') {
                     this.signOut();
                     alert('Usuario no es tipo cliente.');
@@ -213,7 +218,8 @@ export class SignIn {
                         { property: 'business.state.name', operator: '=', value: 'Enabled' },
                         { property: 'customer.state.name', operator: '=', value: 'Enabled' },
                         { property: 'isSuper', operator: '=', value: true },
-                        { property: 'userType', operator: '=', value: 'CUSTOMER' }
+                        { property: 'userType', operator: '=', value: 'CUSTOMER' },
+                        { property: 'isWebUser', operator: '=', value: false } //Cambio para NETACCESS si es true no debe permitir iniciar sesion
                     ]
                 },
                 limit: 1

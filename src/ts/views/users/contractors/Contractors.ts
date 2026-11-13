@@ -473,17 +473,17 @@ export class Contractors {
                 }
 
                 const contractorRaw = JSON.stringify({
-                    "lastName": `${_values.lastName.value}`,
-                    "secondLastName": `${_values.secondLastName.value}`,
+                    "lastName": `${_values.lastName.value.trim()}`,
+                    "secondLastName": `${_values.secondLastName.value.trim()}`,
                     "isSuper": false,
                     "newUser": true,
-                    "email": `${_values.email.value}`,
-                    "temp": `${_values.temporalPass.value}`,
+                    "email": `${_values.email.value.trim()}`,
+                    "temp": `${_values.temporalPass.value.trim()}`,
                     "isWebUser": false,
                     "active": true,
-                    "firstName": `${_values.firstName.value}`,
-                    "ingressHour": `${_values.ingressHour.value}`,
-                    "turnChange": `${_values.turnChange.value}`,
+                    "firstName": `${_values.firstName.value.trim()}`,
+                    "ingressHour": `${_values.ingressHour.value.trim()}`,
+                    "turnChange": `${_values.turnChange.value.trim()}`,
                     "state": {
                         "id": `${_values.state.dataset.optionid}`
                     },
@@ -502,32 +502,32 @@ export class Contractors {
                     "business": {
                         "id": `${currentUserInfo.business.id}`
                     },
-                    "phone": `${_values.phoneNumer.value}`,
-                    "dni": `${_values.dni.value}`,
-                    "vehicularPlate": `${_values.vehicularPlate.value}`,
+                    "phone": `${_values.phoneNumer.value.trim()}`,
+                    "dni": `${_values.dni.value.trim()}`,
+                    "vehicularPlate": `${_values.vehicularPlate.value.trim()}`,
                     "userType": "CONTRACTOR",
                     "username": `${_values.username.value.replace(/\s+/g, '')}@${currentCustomer.name.toLowerCase().replace(/\s+/g, '')}.com`,
                 })
                 const existUsername = await getVerifyUsername(`${_values.username.value}@${currentCustomer.name.toLowerCase().replace(/\s+/g, '')}.com`)
-                /*const existEmail = await getVerifyEmail(_values.email.value);
+                /*const existEmail = await getVerifyEmail(_values.email.value.trim());
                 if(existEmail == true){
                     alert("¡Correo electrónico ya existe!");
                 }else */
                 if(existUsername != "none"){
                     alert("¡Usuario ya existe, es tipo "+existUsername+"!")
-                }else if(_values.firstName.value === '' || _values.firstName.value === undefined){
+                }else if(_values.firstName.value.trim() === '' || _values.firstName.value === undefined){
                     alert("¡Nombre vacío!")
-                }else if(_values.lastName.value === '' || _values.lastName.value === undefined){
+                }else if(_values.lastName.value.trim() === '' || _values.lastName.value === undefined){
                     alert("¡Primer apellido vacío!")
-                }else if(_values.secondLastName.value === '' || _values.secondLastName.value === undefined){
+                }else if(_values.secondLastName.value.trim() === '' || _values.secondLastName.value === undefined){
                     alert("¡Segundo apellido vacío!")
-                }/*else if(_values.email.value === '' || _values.email.value === undefined){
+                }/*else if(_values.email.value.trim() === '' || _values.email.value === undefined){
                     alert("¡Correo vacío!")
-                }*/else if(_values.dni.value === '' || _values.dni.value === undefined){
+                }*/else if(_values.dni.value.trim() === '' || _values.dni.value === undefined){
                     alert("DNI vacío!")
-                }else if(_values.temporalPass.value === '' || _values.temporalPass.value === undefined){
+                }else if(_values.temporalPass.value.trim() === '' || _values.temporalPass.value === undefined){
                     alert("¡Clave vacía!")
-                }else if (_values.temporalPass.value.length < Config.minLengthPassword) {
+                }else if (_values.temporalPass.value.trim().length < Config.minLengthPassword) {
                     alert(`¡La clave debe tener al menos ${Config.minLengthPassword} caracteres!`)
                 }else{
                     reg(contractorRaw);
@@ -738,7 +738,11 @@ export class Contractors {
         })
 
         const RInterface = async (entities: string, entityID: string): Promise<void> => {
+            if (!currentCustomer && customerId) {
+                currentCustomer = await currentCustomerData()
+            }
             const data: any = await getEntityData(entities, entityID)
+            const permitPersonalStatic = currentCustomer?.permitPersonalStatic ?? data?.customer?.permitPersonalStatic ?? false
             this.entityDialogContainer.innerHTML = ''
             this.entityDialogContainer.style.display = 'flex'
             this.entityDialogContainer.innerHTML = `
@@ -755,17 +759,17 @@ export class Contractors {
                 <!-- EDITOR BODY -->
                 <div class="entity_editor_body">
                     <div class="material_input">
-                    <input type="text" id="entity-firstname" class="input_filled" value="${data.firstName}" readonly>
+                    <input type="text" id="entity-firstname" class="input_filled" value="${data.firstName}">
                     <label for="entity-firstname">Nombre</label>
                     </div>
 
                     <div class="material_input">
-                    <input type="text" id="entity-lastname" class="input_filled" value="${data.lastName}" reandonly>
+                    <input type="text" id="entity-lastname" class="input_filled" value="${data.lastName}">
                     <label for="entity-lastname">Apellido</label>
                     </div>
 
                     <div class="material_input">
-                    <input type="text" id="entity-secondlastname" class="input_filled" value="${data.secondLastName}" readonly>
+                    <input type="text" id="entity-secondlastname" class="input_filled" value="${data.secondLastName}">
                     <label for="entity-secondlastname">2do Apellido</label>
                     </div>
 
@@ -858,6 +862,11 @@ export class Contractors {
                     <label for="tempPass">Contraseña:</label>
                     </div> -->
                     <br>
+                    <div style="display: ${permitPersonalStatic ? 'flex' : 'none'};justify-content:center">
+                        <img alt="Código QR ${data?.dni ?? ''}" id="qrcode">
+                        <br>
+                        <button id="btnDescargar">Descargar</button>
+                    </div>
 
                 </div>
                 <!-- END EDITOR BODY -->
@@ -873,8 +882,35 @@ export class Contractors {
             inputSelect('State', 'entity-state', data.state.name)
             //inputSelect('Business', 'entity-business')
             //inputSelect('Contractor', 'entity-contractor')
+            if (permitPersonalStatic) {
+                const qr: InterfaceElement = document.getElementById("qrcode")
+                if (qr) {
+                    // @ts-ignore
+                    new QRious({
+                        element: qr,
+                        value: data.id,
+                        size: 250,
+                        backgroundAlpha: 1,
+                        foreground: "#1D4C82FF",
+                        level: "H", // Puede ser L,M,Q y H (L es el de menor nivel, H el mayor)
+                    });
+                    download(qr, data)
+                }
+            }
             this.close()
             updatecontractor(entityID)
+        }
+
+        const download = (qr: any, data: any) => {
+            const btnDescargar: InterfaceElement = document.getElementById('btnDescargar')
+            if (btnDescargar) {
+                btnDescargar.addEventListener('click', () => {
+                    const enlace = document.createElement("a")
+                    enlace.href = qr.src
+                    enlace.download = `Código QR ${data?.dni ?? ''}.png`
+                    enlace.click()
+                })
+            }
         }
 
         const updatecontractor = async (contractorId: any): Promise<void> => {
@@ -882,9 +918,9 @@ export class Contractors {
             updateButton = document.getElementById('update-changes')
             updateButton.addEventListener('click', () => {
                 const _values: InterfaceElementCollection = {
-                    //firstName: document.getElementById('entity-firstname'),
-                    //lastName: document.getElementById('entity-lastname'),
-                    //secondLastName: document.getElementById('entity-secondlastname'),
+                    firstName: document.getElementById('entity-firstname'),
+                    lastName: document.getElementById('entity-lastname'),
+                    secondLastName: document.getElementById('entity-secondlastname'),
                     phone: document.getElementById('entity-phone'),
                     dni: document.getElementById('entity-dni'),
                     status: document.getElementById('entity-state'),
@@ -894,23 +930,29 @@ export class Contractors {
                     vehicularPlate: document.getElementById('entity-vehicularPlate'),
                 }
                 let contractorRaw = JSON.stringify({
-                    //"lastName": `${_values.lastName.value}`,
-                    //"secondLastName": `${_values.secondLastName.value}`,
+                    "firstName": `${_values.firstName.value.trim()}`,
+                    "lastName": `${_values.lastName.value.trim()}`,
+                    "secondLastName": `${_values.secondLastName.value.trim()}`,
                     "active": true,
-                    //"firstName": `${_values.firstName.value}`,
                     "state": {
                         "id": `${_values.status.dataset.optionid}`
                     },
-                    "ingressHour": `${_values.ingressHour.value}`,
-                    "turnChange": `${_values.turnChange.value}`,
-                    "phone": `${_values.phone.value}`,
-                    "dni": `${_values.dni.value}`,
-                    "vehicularPlate": `${_values.vehicularPlate.value}`,
+                    "ingressHour": `${_values.ingressHour.value.trim()}`,
+                    "turnChange": `${_values.turnChange.value.trim()}`,
+                    "phone": `${_values.phone.value.trim()}`,
+                    "dni": `${_values.dni.value.trim()}`,
+                    "vehicularPlate": `${_values.vehicularPlate.value.trim()}`,
                     /*"contractor": {
                         "id": `${_values.contractor.optionid}`
                     }*/
                 })
-                if (_values.dni.value === '' || _values.dni.value === undefined) {
+                if (_values.firstName.value.trim() === '' || _values.firstName.value === undefined) {
+                    alert("¡Nombre vacío!");
+                }else if (_values.lastName.value.trim() === '' || _values.lastName.value === undefined) {
+                    alert("¡Primer apellido vacío!");
+                }else if (_values.secondLastName.value.trim() === '' || _values.secondLastName.value === undefined) {
+                    alert("¡Segundo apellido vacío!");
+                }else if (_values.dni.value.trim() === '' || _values.dni.value === undefined) {
                     alert("DNI vacío!");
                 }else{
                     update(contractorRaw)
